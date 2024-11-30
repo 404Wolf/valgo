@@ -18,6 +18,7 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             openapi-generator-cli
+            go
           ];
         };
       };
