@@ -1,0 +1,2101 @@
+openapi: 3.1.0
+info:
+  description: |-
+    Val Town’s public API
+
+    OpenAPI JSON endpoint:
+
+    https://api.val.town/openapi.json
+  termsOfService: https://www.val.town/termsofuse
+  title: Val Town API
+  version: "1"
+externalDocs:
+  description: Find more info here
+  url: https://api.val.town/documentation
+servers:
+- description: Production
+  url: https://api.val.town
+tags:
+- description: |-
+    These endpoints
+    let you get, create, and run vals.
+  name: vals
+- description: |-
+    Many API endpoints
+    accept IDs instead of user-facing names. The alias
+    endpoints let you convert between the user-facing name of a
+    val or another object into an ID that can be used with other
+    API endpoints
+  name: alias
+- description: |-
+    These endpoints
+    give access to details and data from the requesting user.
+  name: me
+- description: Users
+  name: users
+- description: SQLite
+  name: sqlite
+- description: Blobs
+  name: blobs
+- description: Search
+  name: search
+- description: Emails
+  name: emails
+paths:
+  /v1/search/vals:
+    get:
+      description: Search for vals across the platform
+      operationId: searchVals
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Search query
+        explode: true
+        in: query
+        name: query
+        required: true
+        schema:
+          maxLength: 512
+          minLength: 1
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/searchVals_200_response'
+          description: A paginated result set
+      tags:
+      - search
+  /v1/alias/{username}:
+    get:
+      description: "Get basic details about a user, given their username"
+      operationId: aliasUsername
+      parameters:
+      - description: Username of the user who you are looking for
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Default Response
+      tags:
+      - alias
+  /v1/alias/{username}/{val_name}:
+    get:
+      description: Get a val
+      operationId: aliasVal
+      parameters:
+      - description: Username of the user whose val you are looking for
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of the val you’re looking for
+        explode: false
+        in: path
+        name: val_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/aliasVal_200_response'
+          description: A Val
+      tags:
+      - alias
+  /v1/me:
+    get:
+      description: Get profile information for the current user
+      operationId: meGet
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: 00000000-0000-0000-0000-000000000000
+                bio: Hello world
+                username: tmcw
+                email: example@example.com
+                profileImageUrl: null
+                tier: pro
+              schema:
+                $ref: '#/components/schemas/meGet_200_response'
+          description: "Your user information, with tier and email included"
+      tags:
+      - me
+  /v1/me/likes:
+    get:
+      description: Get vals liked by the current user
+      operationId: meLikes
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/searchVals_200_response'
+          description: A paginated result set
+      tags:
+      - me
+  /v1/me/comments:
+    get:
+      description: "Get comments related to current user, either given or received"
+      operationId: meComments
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Include items created after this date
+        explode: true
+        in: query
+        name: since
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Include items created before this date
+        explode: true
+        in: query
+        name: until
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: "Whether to get comments you have received, given, or both"
+        explode: true
+        in: query
+        name: relationship
+        required: true
+        schema:
+          default: any
+          enum:
+          - any
+          - received
+          - given
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/meComments_200_response'
+          description: A paginated result set
+      tags:
+      - me
+  /v1/me/references:
+    get:
+      description: Get vals that depend on any of the user's vals
+      operationId: meReferences
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Include items created after this date
+        explode: true
+        in: query
+        name: since
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Include items created before this date
+        explode: true
+        in: query
+        name: until
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/meReferences_200_response'
+          description: A paginated result set
+      tags:
+      - me
+  /v1/blob:
+    get:
+      description: List blobs in your account
+      operationId: blobsList
+      parameters:
+      - description: "If specified, only include blobs that start with this string"
+        explode: true
+        in: query
+        name: prefix
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - key: hello_world
+                size: 20
+                lastModified: 2024-06-24T20:00:59.702Z
+              schema:
+                description: List of blobs that you’ve stored
+                items:
+                  $ref: '#/components/schemas/BlobListingItem'
+                type: array
+          description: List of blobs that you’ve stored
+      tags:
+      - blobs
+  /v1/blob/{key}:
+    delete:
+      description: Delete a blob
+      operationId: blobsDelete
+      parameters:
+      - description: Key that uniquely identifies this blob
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          maxLength: 512
+          minLength: 1
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Blob successfully deleted
+      security:
+      - bearerAuth: []
+      tags:
+      - blobs
+    get:
+      description: Get a blob’s contents.
+      operationId: blobsGet
+      parameters:
+      - description: Key that uniquely identifies this blob
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          maxLength: 512
+          minLength: 1
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Binary contents of the returned file
+      tags:
+      - blobs
+    post:
+      description: Store data in blob storage
+      operationId: blobsStore
+      parameters:
+      - description: Key that uniquely identifies this blob
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          maxLength: 512
+          minLength: 1
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Binary input data
+              format: binary
+              type: string
+        description: Binary input data
+      responses:
+        "201":
+          description: Successfully stored as blob
+      security:
+      - bearerAuth: []
+      tags:
+      - blobs
+  /v1/users/{user_id}:
+    get:
+      description: Get basic information about a user
+      operationId: usersGet
+      parameters:
+      - description: User Id
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Default Response
+      tags:
+      - users
+  /v1/users/{user_id}/vals:
+    get:
+      description: List a user's vals
+      operationId: usersVals
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: User Id
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/searchVals_200_response'
+          description: A paginated result set
+      tags:
+      - users
+  /v1/sqlite/execute:
+    post:
+      description: Execute a single SQLite statement and return results
+      operationId: sqliteExecute
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example1:
+                value:
+                  statement: SELECT 1;
+              example2:
+                value:
+                  statement:
+                    sql: SELECT * FROM table WHERE column = ?;
+                    args:
+                    - 1
+            schema:
+              $ref: '#/components/schemas/sqliteExecute_request'
+        description: A single statement to run
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultSet'
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - sqlite
+  /v1/sqlite/batch:
+    post:
+      description: Execute a batch of SQLite statements and return results for all
+        of them
+      operationId: sqliteBatch
+      requestBody:
+        content:
+          application/json:
+            example:
+              statements:
+              - SELECT 1;
+              mode: read
+            schema:
+              $ref: '#/components/schemas/sqliteBatch_request'
+        description: A set of statements to be run in a single batch
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - columns:
+                - id
+                columnTypes:
+                - number
+                rows:
+                - - 1
+                rowsAffected: 0
+                lastInsertRowid: null
+              schema:
+                description: Array of results from the statements executed
+                items:
+                  $ref: '#/components/schemas/ResultSet'
+                type: array
+          description: Array of results from the statements executed
+      security:
+      - bearerAuth: []
+      tags:
+      - sqlite
+  /v1/run/{valname}:
+    get:
+      deprecated: true
+      description: "Run a val, specify any parameters in a querystring"
+      operationId: runGet
+      parameters:
+      - description: An argument that will be passed to the function as a JavaScript
+          value
+        explode: true
+        in: query
+        name: args
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Name of the val, in concatenated style, like username.valname"
+        explode: false
+        in: path
+        name: valname
+        required: true
+        schema:
+          pattern: "^[^.]+.[^.]+$"
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Default Response
+      tags:
+      - vals
+    post:
+      deprecated: true
+      description: "Run a val, with arguments in the request body"
+      operationId: runPost
+      parameters:
+      - description: "Name of the val, in concatenated style, like username.valname"
+        explode: false
+        in: path
+        name: valname
+        required: true
+        schema:
+          pattern: "^[^.]+.[^.]+$"
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              args:
+              - 1
+            schema:
+              $ref: '#/components/schemas/runPost_request'
+        description: Arguments to call the method with
+      responses:
+        "200":
+          description: Default Response
+      tags:
+      - vals
+  /v1/email:
+    post:
+      description: Send emails
+      operationId: emailsSend
+      requestBody:
+        content:
+          application/json:
+            example:
+              subject: An important message
+              text: Hello world
+              html: Hello <strong>world</strong>
+            schema:
+              $ref: '#/components/schemas/emailsSend_request'
+        description: Fields for an email to be sent
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emailsSend_200_response'
+          description: Successfully sent email
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emailsSend_500_response'
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - emails
+  /v1/vals:
+    post:
+      description: Create a new val
+      operationId: valsCreate
+      requestBody:
+        content:
+          application/json:
+            example:
+              code: console.log(1);
+              name: myVal
+              readme: '# My Val'
+              privacy: public
+              type: script
+            schema:
+              $ref: '#/components/schemas/valsCreate_request'
+        description: Val information provided to create a new val
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedVal'
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+    put:
+      description: Run an existing val or create a new one
+      operationId: valsPut
+      requestBody:
+        content:
+          application/json:
+            example:
+              code: console.log(1);
+              name: myVal
+            schema:
+              $ref: '#/components/schemas/valsPut_request'
+        description: "Create a new val, or version of a val, with new code"
+        required: true
+      responses:
+        "200":
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+  /v1/vals/{val_id}:
+    delete:
+      description: Delete a val
+      operationId: valsDelete
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Val successfully deleted
+        "404":
+          description: The val was not found
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+    get:
+      description: Get a val by id
+      operationId: valsGet
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedVal'
+          description: Default Response
+      tags:
+      - vals
+    put:
+      description: Update an existing val
+      operationId: valsUpdate
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example1:
+                value:
+                  readme: '# Updated readme'
+                  name: myVal
+              example2:
+                value:
+                  type: http
+            schema:
+              $ref: '#/components/schemas/valsUpdate_request'
+        description: "Note: you must supply at least one of the keys in this object\
+          \ in order to update a val"
+      responses:
+        "204":
+          description: Val successfully updated
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+  /v1/vals/{val_id}/versions:
+    get:
+      description: List versions of a val
+      operationId: valsList
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/valsList_200_response'
+          description: A paginated result set
+      tags:
+      - vals
+    post:
+      description: Create a new version of a val
+      operationId: valsCreateVersion
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              code: console.log(1);
+              name: myVal
+              readme: '# My Val'
+              privacy: public
+              type: script
+            schema:
+              $ref: '#/components/schemas/valsCreate_request'
+        description: Val information provided to create a new val
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedVal'
+          description: Default Response
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedVal'
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+  /v1/vals/{val_id}/versions/{version}:
+    delete:
+      description: Delete a specific version of a val
+      operationId: valsDeleteVersion
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The val version
+        explode: false
+        in: path
+        name: version
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Version successfully deleted
+        "404":
+          description: The val was not found
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+    get:
+      description: Get a specific version of a val
+      operationId: valsGetVersion
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The val version
+        explode: false
+        in: path
+        name: version
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedVal'
+          description: Default Response
+      tags:
+      - vals
+  /v1/vals/{val_id}/evaluations/{evaluation_id}/cancel:
+    post:
+      description: Cancel a running val
+      operationId: valsCancel
+      parameters:
+      - description: Id of a val
+        explode: false
+        in: path
+        name: val_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The ID of the evaluation - the specific time that a val was run
+          - that you want to cancel
+        explode: false
+        in: path
+        name: evaluation_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/valsCancel_200_response'
+          description: The evaluation_id was successfully searched for and the evaluation
+            was either already done or now has been cancelled
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Default Response
+      security:
+      - bearerAuth: []
+      tags:
+      - vals
+components:
+  schemas:
+    User:
+      description: User object
+      example:
+        id: 00000000-0000-0000-0000-000000000000
+        bio: Hello world
+        username: tmcw
+        url: https://val.town/u/tmcw
+        profileImageUrl: null
+      properties:
+        id:
+          description: The ID of this user
+          format: uuid
+          type: string
+        bio:
+          description: "The user’s biography, if they have provided one"
+          nullable: true
+          type: string
+        username:
+          description: The user’s handle that they chose for themselves. Does not
+            include the @ symbol
+          nullable: true
+          type: string
+        profileImageUrl:
+          description: "URL that points to the user’s profile image, if one exists"
+          format: uri
+          nullable: true
+          type: string
+        url:
+          description: URL of this user’s profile on Val Town’s website
+          format: uri
+          type: string
+        links:
+          $ref: '#/components/schemas/meGet_200_response_links'
+      required:
+      - bio
+      - id
+      - links
+      - profileImageUrl
+      - url
+      - username
+    ResultSet:
+      description: Result of executing an SQL statement.
+      example:
+        columnTypes:
+        - columnTypes
+        - columnTypes
+        columns:
+        - columns
+        - columns
+        rowsAffected: 0.8008281904610115
+        lastInsertRowid: ResultSet_lastInsertRowid
+        rows:
+        - - ""
+          - ""
+        - - ""
+          - ""
+      properties:
+        columns:
+          description: |-
+            Names of columns.
+
+            Names of columns can be defined using the `AS` keyword in SQL:
+
+            ```sql
+            SELECT author AS author, COUNT(*) AS count FROM books GROUP BY author
+            ```
+          items:
+            type: string
+          type: array
+        columnTypes:
+          description: |-
+            Types of columns.
+
+            The types are currently shown for types declared in a SQL table. For column types of function calls, for example, an empty string is returned.
+          items:
+            type: string
+          type: array
+        rows:
+          description: Rows produced by the statement.
+          items:
+            items: {}
+            type: array
+          type: array
+        rowsAffected:
+          description: |-
+            Number of rows that were affected by an UPDATE, INSERT or DELETE operation.
+
+            This value is not specified for other SQL statements.
+          type: number
+        lastInsertRowid:
+          $ref: '#/components/schemas/ResultSet_lastInsertRowid'
+      required:
+      - columnTypes
+      - columns
+      - rows
+      - rowsAffected
+      title: ResultSet
+    ExtendedVal:
+      description: A Val
+      example:
+        code: code
+        author:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        privacy: public
+        likeCount: 0
+        readme: readme
+        type: interval
+        version: 0
+        url: https://openapi-generator.tech
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        public: true
+        referenceCount: 0
+        name: name
+        links:
+          endpoint: https://openapi-generator.tech
+          versions: https://openapi-generator.tech
+          module: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        versionCreatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          description: The name of this val
+          type: string
+        id:
+          description: This val’s id
+          format: uuid
+          type: string
+        version:
+          description: "The version of this val, starting at zero"
+          minimum: 0
+          type: integer
+        code:
+          description: TypeScript code associated with this val
+          nullable: true
+          type: string
+        public:
+          description: Whether this val is available publicly on Val Town
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        type:
+          description: "The type of a val. HTTP can receive web requests, Email can\
+            \ receive emails, Cron runs periodically, and Script can be used for libraries\
+            \ or one-off calculations"
+          enum:
+          - interval
+          - http
+          - express
+          - email
+          - script
+          - rpc
+          - httpnext
+          type: string
+        url:
+          description: The URL of this val on the Val Town website
+          format: uri
+          type: string
+        links:
+          $ref: '#/components/schemas/aliasVal_200_response_links'
+        author:
+          $ref: '#/components/schemas/aliasVal_200_response_author'
+        versionCreatedAt:
+          format: date-time
+          type: string
+        likeCount:
+          description: How many likes this val has received
+          minimum: 0
+          type: integer
+        referenceCount:
+          minimum: 0
+          type: integer
+          descriptions: How many other public vals have imported this one
+        readme:
+          description: "This val’s readme, as Markdown"
+          nullable: true
+          type: string
+      required:
+      - author
+      - code
+      - createdAt
+      - id
+      - likeCount
+      - links
+      - name
+      - privacy
+      - public
+      - readme
+      - referenceCount
+      - type
+      - url
+      - version
+    BasicVal:
+      description: A Val
+      example:
+        version: 0
+        name: counter
+        code: export const count = 1;
+        createdAt: 2024-06-11T22:05:12.585Z
+        public: true
+        id: 00000000-0000-0000-0000-000000000000
+        privacy: public
+        type: script
+        url: https://val.town/v/tmcw/counter
+        author:
+          id: 00000000-0000-0000-0000-000000000000
+          username: tmcw
+      properties:
+        name:
+          description: The name of this val
+          type: string
+        id:
+          description: This val’s id
+          format: uuid
+          type: string
+        version:
+          description: "The version of this val, starting at zero"
+          minimum: 0
+          type: integer
+        code:
+          description: TypeScript code associated with this val
+          nullable: true
+          type: string
+        public:
+          description: Whether this val is available publicly on Val Town
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        type:
+          description: "The type of a val. HTTP can receive web requests, Email can\
+            \ receive emails, Cron runs periodically, and Script can be used for libraries\
+            \ or one-off calculations"
+          enum:
+          - interval
+          - http
+          - express
+          - email
+          - script
+          - rpc
+          - httpnext
+          type: string
+        url:
+          description: The URL of this val on the Val Town website
+          format: uri
+          type: string
+        links:
+          $ref: '#/components/schemas/aliasVal_200_response_links'
+        author:
+          $ref: '#/components/schemas/aliasVal_200_response_author'
+      required:
+      - author
+      - code
+      - createdAt
+      - id
+      - links
+      - name
+      - privacy
+      - public
+      - type
+      - url
+      - version
+    PaginationLinks:
+      description: Links to use for pagination
+      example:
+        next: https://openapi-generator.tech
+        prev: https://openapi-generator.tech
+        self: https://openapi-generator.tech
+      properties:
+        self:
+          description: URL of this page
+          format: uri
+          type: string
+        prev:
+          description: "URL of the previous page, if any"
+          format: uri
+          type: string
+        next:
+          description: "URL of the next page, if any"
+          format: uri
+          type: string
+      required:
+      - self
+    searchVals_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - version: 0
+          name: counter
+          code: export const count = 1;
+          createdAt: 2024-06-11T22:05:12.585Z
+          public: true
+          id: 00000000-0000-0000-0000-000000000000
+          privacy: public
+          type: script
+          url: https://val.town/v/tmcw/counter
+          author:
+            id: 00000000-0000-0000-0000-000000000000
+            username: tmcw
+        - version: 0
+          name: counter
+          code: export const count = 1;
+          createdAt: 2024-06-11T22:05:12.585Z
+          public: true
+          id: 00000000-0000-0000-0000-000000000000
+          privacy: public
+          type: script
+          url: https://val.town/v/tmcw/counter
+          author:
+            id: 00000000-0000-0000-0000-000000000000
+            username: tmcw
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/BasicVal'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
+    aliasVal_200_response_links:
+      example:
+        endpoint: https://openapi-generator.tech
+        versions: https://openapi-generator.tech
+        module: https://openapi-generator.tech
+        self: https://openapi-generator.tech
+      properties:
+        self:
+          description: The URL of this val on this API
+          format: uri
+          type: string
+        versions:
+          description: The endpoint to retrieve this val’s versions
+          format: uri
+          type: string
+        module:
+          description: The URL of this Val’s source code as a module
+          format: uri
+          type: string
+        endpoint:
+          description: "This val’s web endpoint, where it serves a website or API"
+          format: uri
+          type: string
+      required:
+      - module
+      - self
+      - versions
+    aliasVal_200_response_author:
+      description: The user who created this val
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      nullable: true
+      properties:
+        id:
+          format: uuid
+          type: string
+        username:
+          nullable: true
+          type: string
+      required:
+      - id
+      - username
+    aliasVal_200_response:
+      description: A Val
+      example:
+        code: code
+        author:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        privacy: public
+        likeCount: 0
+        readme: readme
+        type: interval
+        version: 0
+        url: https://openapi-generator.tech
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        public: true
+        referenceCount: 0
+        name: name
+        links:
+          endpoint: https://openapi-generator.tech
+          versions: https://openapi-generator.tech
+          module: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        versionCreatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          description: The name of this val
+          type: string
+        id:
+          description: This val’s id
+          format: uuid
+          type: string
+        version:
+          description: "The version of this val, starting at zero"
+          minimum: 0
+          type: integer
+        code:
+          description: TypeScript code associated with this val
+          nullable: true
+          type: string
+        public:
+          description: Whether this val is available publicly on Val Town
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        type:
+          description: "The type of a val. HTTP can receive web requests, Email can\
+            \ receive emails, Cron runs periodically, and Script can be used for libraries\
+            \ or one-off calculations"
+          enum:
+          - interval
+          - http
+          - express
+          - email
+          - script
+          - rpc
+          - httpnext
+          type: string
+        url:
+          description: The URL of this val on the Val Town website
+          format: uri
+          type: string
+        links:
+          $ref: '#/components/schemas/aliasVal_200_response_links'
+        author:
+          $ref: '#/components/schemas/aliasVal_200_response_author'
+        versionCreatedAt:
+          format: date-time
+          type: string
+        likeCount:
+          description: How many likes this val has received
+          minimum: 0
+          type: integer
+        referenceCount:
+          minimum: 0
+          type: integer
+          descriptions: How many other public vals have imported this one
+        readme:
+          description: "This val’s readme, as Markdown"
+          nullable: true
+          type: string
+      required:
+      - author
+      - code
+      - createdAt
+      - id
+      - likeCount
+      - links
+      - name
+      - privacy
+      - public
+      - readme
+      - referenceCount
+      - type
+      - url
+      - version
+    meGet_200_response_links:
+      example:
+        self: https://openapi-generator.tech
+      properties:
+        self:
+          description: URL of this user on this API
+          format: uri
+          type: string
+      required:
+      - self
+    meGet_200_response:
+      description: "Your user information, with tier and email included"
+      example:
+        tier: free
+        bio: bio
+        links:
+          self: https://openapi-generator.tech
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        profileImageUrl: https://openapi-generator.tech
+        url: https://openapi-generator.tech
+        email: email
+        username: username
+      properties:
+        id:
+          description: The ID of this user
+          format: uuid
+          type: string
+        bio:
+          description: "The user’s biography, if they have provided one"
+          nullable: true
+          type: string
+        username:
+          description: The user’s handle that they chose for themselves. Does not
+            include the @ symbol
+          nullable: true
+          type: string
+        profileImageUrl:
+          description: "URL that points to the user’s profile image, if one exists"
+          format: uri
+          nullable: true
+          type: string
+        url:
+          description: URL of this user’s profile on Val Town’s website
+          format: uri
+          type: string
+        links:
+          $ref: '#/components/schemas/meGet_200_response_links'
+        tier:
+          description: Your account tier
+          enum:
+          - free
+          - pro
+          nullable: true
+          type: string
+        email:
+          description: Your email address
+          type: string
+      required:
+      - bio
+      - email
+      - id
+      - links
+      - profileImageUrl
+      - tier
+      - url
+      - username
+    meComments_200_response_data_inner_author:
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        id:
+          format: uuid
+          type: string
+        username:
+          nullable: true
+          type: string
+      required:
+      - id
+      - username
+    meComments_200_response_data_inner_val:
+      example:
+        author:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        name: name
+        privacy: public
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        version: 0
+      properties:
+        name:
+          description: Name of the val that is being commented on
+          type: string
+        id:
+          format: uuid
+          type: string
+        version:
+          minimum: 0
+          type: integer
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        author:
+          $ref: '#/components/schemas/aliasVal_200_response_author'
+      required:
+      - author
+      - id
+      - name
+      - privacy
+      - version
+    meComments_200_response_data_inner:
+      example:
+        val:
+          author:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          name: name
+          privacy: public
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          version: 0
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        author:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        comment: comment
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        comment:
+          description: "Text of the given comment, in Markdown"
+          type: string
+        id:
+          description: The comment’s id
+          format: uuid
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        author:
+          $ref: '#/components/schemas/meComments_200_response_data_inner_author'
+        val:
+          $ref: '#/components/schemas/meComments_200_response_data_inner_val'
+      required:
+      - author
+      - comment
+      - createdAt
+      - id
+      - val
+    meComments_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - val:
+            author:
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              username: username
+            name: name
+            privacy: public
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            version: 0
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          author:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          comment: comment
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - val:
+            author:
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              username: username
+            name: name
+            privacy: public
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            version: 0
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          author:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          comment: comment
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/meComments_200_response_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
+    meReferences_200_response_data_inner_reference:
+      description: A val in a dependency relationship
+      example:
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        username: username
+      properties:
+        id:
+          description: The id of this val
+          format: uuid
+          type: string
+        username:
+          description: The username of the person who authored this val
+          nullable: true
+          type: string
+        author_id:
+          description: The ID of the person who authored this val
+          format: uuid
+          nullable: true
+          type: string
+        name:
+          description: The name of this val
+          type: string
+      required:
+      - author_id
+      - id
+      - name
+      - username
+    meReferences_200_response_data_inner:
+      description: A description of a dependency from one val (reference) to another
+        (dependsOn) that was introduced at a particular time.
+      example:
+        reference:
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        dependsOn:
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        referencedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        reference:
+          $ref: '#/components/schemas/meReferences_200_response_data_inner_reference'
+        dependsOn:
+          $ref: '#/components/schemas/meReferences_200_response_data_inner_reference'
+        referencedAt:
+          format: date-time
+          type: string
+      required:
+      - dependsOn
+      - reference
+      - referencedAt
+    meReferences_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - reference:
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          dependsOn:
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          referencedAt: 2000-01-23T04:56:07.000+00:00
+        - reference:
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          dependsOn:
+            name: name
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            author_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          referencedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/meReferences_200_response_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
+    BlobListingItem:
+      example:
+        size: 0
+        lastModified: 2000-01-23T04:56:07.000+00:00
+        key: key
+      properties:
+        key:
+          type: string
+        size:
+          description: Size in bytes of the object
+          type: integer
+        lastModified:
+          description: Creation date of the object
+          format: date-time
+          type: string
+      required:
+      - key
+      title: BlobListingItem
+    StatementArg:
+      anyOf:
+      - items:
+          description: A value to be used as a parameter
+          title: TursoValue
+      - additionalProperties:
+          description: A value to be used as a parameter
+          title: TursoValue
+      description: List of arguments to be used in the given statement
+      title: StatementArg
+    ParameterizedQuery:
+      description: A parameterized SQL query. See https://docs.turso.tech/sdk/ts/reference#batch-transactions
+        for reference
+      properties:
+        sql:
+          description: "SQL statement, with ? placeholders for arguments"
+          type: string
+        args:
+          $ref: '#/components/schemas/StatementArg'
+      required:
+      - args
+      - sql
+      title: ParameterizedQuery
+    sqliteExecute_request_statement:
+      anyOf:
+      - description: Simple SQL statement to run in SQLite
+        type: string
+      - $ref: '#/components/schemas/ParameterizedQuery'
+    sqliteExecute_request:
+      description: A single statement to run
+      properties:
+        statement:
+          $ref: '#/components/schemas/sqliteExecute_request_statement'
+      required:
+      - statement
+    sqliteBatch_request:
+      description: A set of statements to be run in a single batch
+      properties:
+        statements:
+          items:
+            $ref: '#/components/schemas/sqliteExecute_request_statement'
+          type: array
+        mode:
+          enum:
+          - write
+          - read
+          - deferred
+          type: string
+      required:
+      - statements
+    runPost_request:
+      description: Arguments to call the method with
+      properties:
+        args:
+          items: {}
+          type: array
+    EmailNameAndAddress:
+      description: An email address and name
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+      required:
+      - email
+      title: EmailNameAndAddress
+    EmailData:
+      anyOf:
+      - type: string
+      - $ref: '#/components/schemas/EmailNameAndAddress'
+      title: EmailData
+    EmailDataInput:
+      anyOf:
+      - $ref: '#/components/schemas/EmailData'
+      - items:
+          $ref: '#/components/schemas/EmailData'
+        title: EmailDataList
+      description: A single email or list of emails for one of the address fields
+      title: EmailDataInput
+    AttachmentObject:
+      properties:
+        content:
+          type: string
+        filename:
+          type: string
+        type:
+          type: string
+        disposition:
+          type: string
+        contentId:
+          type: string
+      required:
+      - content
+      - filename
+      title: AttachmentObject
+    ReplyToList:
+      anyOf:
+      - $ref: '#/components/schemas/EmailNameAndAddress'
+      - items:
+          $ref: '#/components/schemas/EmailNameAndAddress'
+        title: EmailList
+      description: A reply-to list of email addresses
+      title: ReplyToList
+    emailsSend_request:
+      description: Fields for an email to be sent
+      properties:
+        subject:
+          description: The subject line of the email
+          type: string
+        from:
+          $ref: '#/components/schemas/EmailData'
+        headers:
+          additionalProperties:
+            type: string
+          description: A set of headers to include the email that you send
+        to:
+          $ref: '#/components/schemas/EmailDataInput'
+        cc:
+          $ref: '#/components/schemas/EmailDataInput'
+        bcc:
+          $ref: '#/components/schemas/EmailDataInput'
+        text:
+          description: "Text content of the email, for email clients that may not\
+            \ support HTML"
+          type: string
+        html:
+          description: HTML content of the email. Can be specified alongside text
+          type: string
+        attachments:
+          description: A list of attachments to add to the email
+          items:
+            $ref: '#/components/schemas/AttachmentObject'
+          type: array
+        replyToList:
+          $ref: '#/components/schemas/ReplyToList'
+    emailsSend_200_response:
+      description: Successfully sent email
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    emailsSend_500_response:
+      example:
+        error: error
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    valsPut_request:
+      description: "Create a new val, or version of a val, with new code"
+      properties:
+        code:
+          description: Val source code as TypeScript
+          maxLength: 256000
+          minLength: 1
+          type: string
+        name:
+          description: This val’s name
+          maxLength: 48
+          minLength: 1
+          type: string
+      required:
+      - code
+      - name
+    valsCreate_request:
+      description: Val information provided to create a new val
+      properties:
+        code:
+          description: Val source code as TypeScript
+          maxLength: 256000
+          minLength: 1
+          type: string
+        name:
+          description: This val’s name
+          maxLength: 48
+          minLength: 1
+          pattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+          type: string
+        readme:
+          description: "Readme contents, as Markdown"
+          maxLength: 8192
+          type: string
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        type:
+          default: script
+          description: "The type of the val you want to create. Note that this does\
+            \ not include interval vals, because they cannot be created through the\
+            \ API yet."
+          enum:
+          - httpnext
+          - http
+          - script
+          - email
+          type: string
+      required:
+      - code
+    valsUpdate_request:
+      description: "Note: you must supply at least one of the keys in this object\
+        \ in order to update a val"
+      properties:
+        name:
+          description: This val’s name
+          maxLength: 48
+          minLength: 1
+          pattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+          type: string
+        readme:
+          description: "Readme contents, as Markdown"
+          maxLength: 8192
+          type: string
+        privacy:
+          description: "This val’s privacy setting. Unlisted vals do not appear on\
+            \ profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        type:
+          description: "The type of the val you want to update. Note that this does\
+            \ not include interval vals, because they cannot be created through the\
+            \ API yet."
+          enum:
+          - httpnext
+          - http
+          - script
+          - email
+          type: string
+    valsList_200_response_data_inner:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        val_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        version: 0
+      properties:
+        val_id:
+          description: Id of a val
+          format: uuid
+          type: string
+        version:
+          description: Version of the val
+          minimum: 0
+          type: integer
+        createdAt:
+          format: date-time
+          type: string
+      required:
+      - createdAt
+      - val_id
+      - version
+    valsList_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          val_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          version: 0
+        - createdAt: 2000-01-23T04:56:07.000+00:00
+          val_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          version: 0
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/valsList_200_response_data_inner'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
+    valsCancel_200_response:
+      description: The evaluation_id was successfully searched for and the evaluation
+        was either already done or now has been cancelled
+      example:
+        found: true
+      properties:
+        found:
+          description: True if the evaluation was found and cancelled
+          type: boolean
+      required:
+      - found
+    ResultSet_lastInsertRowid:
+      anyOf:
+      - type: string
+      - type: number
+      description: |-
+        ROWID of the last inserted row.
+
+        This value is not specified if the SQL statement was not an INSERT or if the table was not a ROWID table.
+      nullable: true
+  securitySchemes:
+    bearerAuth:
+      description: "Endpoints that support authorization expect Bearer authentication,\
+        \ using an API token provided from Val Town."
+      scheme: bearer
+      type: http
