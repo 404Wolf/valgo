@@ -11,10 +11,11 @@ package valgo
 
 import (
 	"context"
+	"testing"
+
+	openapiclient "github.com/404wolf/valgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/404wolf/valgo"
 )
 
 func Test_valgo_SearchAPIService(t *testing.T) {
@@ -23,15 +24,12 @@ func Test_valgo_SearchAPIService(t *testing.T) {
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test SearchAPIService SearchVals", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.SearchAPI.SearchVals(context.Background()).Execute()
+		req := apiClient.SearchAPI.SearchVals(context.Background()).Query("xkcdcomicoftheday").Limit(2).Offset(0)
+		resp, httpRes, err := req.Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 }

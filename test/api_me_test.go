@@ -23,7 +23,6 @@ func Test_valgo_MeAPIService(t *testing.T) {
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test MeAPIService MeComments", func(t *testing.T) {
-
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.MeAPI.MeComments(context.Background()).Execute()

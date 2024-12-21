@@ -104,4 +104,12 @@ model_vals_list_200_response_data_inner.go
 model_vals_put_request.go
 model_vals_update_request.go
 response.go
+test/api_alias_test.go
+test/api_blobs_test.go
+test/api_emails_test.go
+test/api_me_test.go
+test/api_search_test.go
+test/api_sqlite_test.go
+test/api_users_test.go
+test/api_vals_test.go
 utils.go
