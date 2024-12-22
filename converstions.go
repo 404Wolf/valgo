@@ -1,6 +1,6 @@
 package valgo
 
-func (v *ExtendedVal) ExtendedValToBasicVal() BasicVal {
+func (v *ExtendedVal) ToBasicVal() BasicVal {
 	return *NewBasicVal(
 		v.Name,
 		v.Id,
