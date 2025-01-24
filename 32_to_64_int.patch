@@ -1,0 +1,45 @@
+diff --git a/model_blob_listing_item.go b/model_blob_listing_item.go
+index fd9a102..beffa7b 100644
+--- a/model_blob_listing_item.go
++++ b/model_blob_listing_item.go
+@@ -24,7 +24,7 @@ var _ MappedNullable = &BlobListingItem{}
+ type BlobListingItem struct {
+ 	Key string `json:"key"`
+ 	// Size in bytes of the object
+-	Size *int32 `json:"size,omitempty"`
++	Size *int64 `json:"size,omitempty"`
+ 	// Creation date of the object
+ 	LastModified *time.Time `json:"lastModified,omitempty"`
+ }
+@@ -74,9 +74,9 @@ func (o *BlobListingItem) SetKey(v string) {
+ }
+ 
+ // GetSize returns the Size field value if set, zero value otherwise.
+-func (o *BlobListingItem) GetSize() int32 {
++func (o *BlobListingItem) GetSize() int64 {
+ 	if o == nil || IsNil(o.Size) {
+-		var ret int32
++		var ret int64
+ 		return ret
+ 	}
+ 	return *o.Size
+@@ -84,7 +84,7 @@ func (o *BlobListingItem) GetSize() int32 {
+ 
+ // GetSizeOk returns a tuple with the Size field value if set, nil otherwise
+ // and a boolean to check if the value has been set.
+-func (o *BlobListingItem) GetSizeOk() (*int32, bool) {
++func (o *BlobListingItem) GetSizeOk() (*int64, bool) {
+ 	if o == nil || IsNil(o.Size) {
+ 		return nil, false
+ 	}
+@@ -100,8 +100,8 @@ func (o *BlobListingItem) HasSize() bool {
+ 	return false
+ }
+ 
+-// SetSize gets a reference to the given int32 and assigns it to the Size field.
+-func (o *BlobListingItem) SetSize(v int32) {
++// SetSize gets a reference to the given int64 and assigns it to the Size field.
++func (o *BlobListingItem) SetSize(v int64) {
+ 	o.Size = &v
+ }
+ 
