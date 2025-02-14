@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | Pointer to **string** | This val’s name | [optional] 
 **Readme** | Pointer to **string** | Readme contents, as Markdown | [optional] 
-**Privacy** | Pointer to **string** | This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them. | [optional] 
+**Privacy** | Pointer to **string** | This resource&#39;s privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them. | [optional] 
 **Type** | Pointer to **string** | The type of the val you want to update. Note that this does not include interval vals, because they cannot be created through the API yet. | [optional] 
 
 ## Methods

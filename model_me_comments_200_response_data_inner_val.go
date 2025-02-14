@@ -25,7 +25,7 @@ type MeComments200ResponseDataInnerVal struct {
 	Name string `json:"name"`
 	Id string `json:"id"`
 	Version int32 `json:"version"`
-	// This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them.
+	// This resource's privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them.
 	Privacy string `json:"privacy"`
 	Author NullableAliasVal200ResponseAuthor `json:"author"`
 }

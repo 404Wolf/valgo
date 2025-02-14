@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Name** | **string** | Name of the val that is being commented on | 
 **Id** | **string** |  | 
 **Version** | **int32** |  | 
-**Privacy** | **string** | This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them. | 
+**Privacy** | **string** | This resource&#39;s privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them. | 
 **Author** | [**NullableAliasVal200ResponseAuthor**](AliasVal200ResponseAuthor.md) |  | 
 
 ## Methods

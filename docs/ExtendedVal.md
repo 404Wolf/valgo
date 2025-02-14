@@ -10,9 +10,9 @@ Name | Type | Description | Notes
 **Code** | **NullableString** | TypeScript code associated with this val | 
 **Public** | **bool** | Whether this val is available publicly on Val Town | 
 **CreatedAt** | **time.Time** |  | 
-**Privacy** | **string** | This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them. | 
+**Privacy** | **string** | This resource&#39;s privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them. | 
 **Type** | **string** | The type of a val. HTTP can receive web requests, Email can receive emails, Cron runs periodically, and Script can be used for libraries or one-off calculations | 
-**Url** | **string** | The URL of this val on the Val Town website | 
+**Url** | **string** | The URL of this resource on the Val Town website | 
 **Links** | [**AliasVal200ResponseLinks**](AliasVal200ResponseLinks.md) |  | 
 **Author** | [**NullableAliasVal200ResponseAuthor**](AliasVal200ResponseAuthor.md) |  | 
 **VersionCreatedAt** | Pointer to **time.Time** |  | [optional] 

@@ -51,6 +51,8 @@ type APIClient struct {
 
 	AliasAPI *AliasAPIService
 
+	BetaAPI *BetaAPIService
+
 	BlobsAPI *BlobsAPIService
 
 	EmailsAPI *EmailsAPIService
@@ -83,6 +85,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	// API Services
 	c.AliasAPI = (*AliasAPIService)(&c.common)
+	c.BetaAPI = (*BetaAPIService)(&c.common)
 	c.BlobsAPI = (*BlobsAPIService)(&c.common)
 	c.EmailsAPI = (*EmailsAPIService)(&c.common)
 	c.MeAPI = (*MeAPIService)(&c.common)
