@@ -16,214 +16,61 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"time"
+	"strings"
 )
 
 
-// MeAPIService MeAPI service
-type MeAPIService service
+// BetaAPIService BetaAPI service
+type BetaAPIService service
 
-type ApiMeCommentsRequest struct {
+type ApiBranchesGetRequest struct {
 	ctx context.Context
-	ApiService *MeAPIService
-	offset *int32
-	limit *int32
-	relationship *string
-	since *time.Time
-	until *time.Time
+	ApiService *BetaAPIService
+	projectId string
+	branchId string
 }
 
-// Number of items to skip in order to deliver paginated results
-func (r ApiMeCommentsRequest) Offset(offset int32) ApiMeCommentsRequest {
-	r.offset = &offset
-	return r
-}
-
-// Maximum items to return in each paginated response
-func (r ApiMeCommentsRequest) Limit(limit int32) ApiMeCommentsRequest {
-	r.limit = &limit
-	return r
-}
-
-// Whether to get comments you have received, given, or both
-func (r ApiMeCommentsRequest) Relationship(relationship string) ApiMeCommentsRequest {
-	r.relationship = &relationship
-	return r
-}
-
-// Include items created after this date
-func (r ApiMeCommentsRequest) Since(since time.Time) ApiMeCommentsRequest {
-	r.since = &since
-	return r
-}
-
-// Include items created before this date
-func (r ApiMeCommentsRequest) Until(until time.Time) ApiMeCommentsRequest {
-	r.until = &until
-	return r
-}
-
-func (r ApiMeCommentsRequest) Execute() (*MeComments200Response, *http.Response, error) {
-	return r.ApiService.MeCommentsExecute(r)
+func (r ApiBranchesGetRequest) Execute() (*Branch, *http.Response, error) {
+	return r.ApiService.BranchesGetExecute(r)
 }
 
 /*
-MeComments Method for MeComments
+BranchesGet Method for BranchesGet
 
-Get comments related to current user, either given or received
+[BETA] Get a branch by id
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiMeCommentsRequest
+ @param projectId Id of a project
+ @param branchId Id of a branch
+ @return ApiBranchesGetRequest
 */
-func (a *MeAPIService) MeComments(ctx context.Context) ApiMeCommentsRequest {
-	return ApiMeCommentsRequest{
+func (a *BetaAPIService) BranchesGet(ctx context.Context, projectId string, branchId string) ApiBranchesGetRequest {
+	return ApiBranchesGetRequest{
 		ApiService: a,
 		ctx: ctx,
+		projectId: projectId,
+		branchId: branchId,
 	}
 }
 
 // Execute executes the request
-//  @return MeComments200Response
-func (a *MeAPIService) MeCommentsExecute(r ApiMeCommentsRequest) (*MeComments200Response, *http.Response, error) {
+//  @return Branch
+func (a *BetaAPIService) BranchesGetExecute(r ApiBranchesGetRequest) (*Branch, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *MeComments200Response
+		localVarReturnValue  *Branch
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MeAPIService.MeComments")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BetaAPIService.BranchesGet")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v1/me/comments"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.offset == nil {
-		return localVarReturnValue, nil, reportError("offset is required and must be specified")
-	}
-	if *r.offset < 0 {
-		return localVarReturnValue, nil, reportError("offset must be greater than 0")
-	}
-	if r.limit == nil {
-		return localVarReturnValue, nil, reportError("limit is required and must be specified")
-	}
-	if *r.limit < 1 {
-		return localVarReturnValue, nil, reportError("limit must be greater than 1")
-	}
-	if *r.limit > 100 {
-		return localVarReturnValue, nil, reportError("limit must be less than 100")
-	}
-	if r.relationship == nil {
-		return localVarReturnValue, nil, reportError("relationship is required and must be specified")
-	}
-
-	parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	if r.since != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "since", r.since, "")
-	}
-	if r.until != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "until", r.until, "")
-	}
-	parameterAddToHeaderOrQuery(localVarQueryParams, "relationship", r.relationship, "")
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiMeGetRequest struct {
-	ctx context.Context
-	ApiService *MeAPIService
-}
-
-func (r ApiMeGetRequest) Execute() (*MeGet200Response, *http.Response, error) {
-	return r.ApiService.MeGetExecute(r)
-}
-
-/*
-MeGet Method for MeGet
-
-Get profile information for the current user
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiMeGetRequest
-*/
-func (a *MeAPIService) MeGet(ctx context.Context) ApiMeGetRequest {
-	return ApiMeGetRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return MeGet200Response
-func (a *MeAPIService) MeGetExecute(r ApiMeGetRequest) (*MeGet200Response, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *MeGet200Response
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MeAPIService.MeGet")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/v1/me"
+	localVarPath := localBasePath + "/v1/projects/{project_id}/branches/{branch_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"branch_id"+"}", url.PathEscape(parameterValueToString(r.branchId, "branchId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -283,60 +130,64 @@ func (a *MeAPIService) MeGetExecute(r ApiMeGetRequest) (*MeGet200Response, *http
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiMeLikesRequest struct {
+type ApiBranchesListRequest struct {
 	ctx context.Context
-	ApiService *MeAPIService
+	ApiService *BetaAPIService
 	offset *int32
 	limit *int32
+	projectId string
 }
 
 // Number of items to skip in order to deliver paginated results
-func (r ApiMeLikesRequest) Offset(offset int32) ApiMeLikesRequest {
+func (r ApiBranchesListRequest) Offset(offset int32) ApiBranchesListRequest {
 	r.offset = &offset
 	return r
 }
 
 // Maximum items to return in each paginated response
-func (r ApiMeLikesRequest) Limit(limit int32) ApiMeLikesRequest {
+func (r ApiBranchesListRequest) Limit(limit int32) ApiBranchesListRequest {
 	r.limit = &limit
 	return r
 }
 
-func (r ApiMeLikesRequest) Execute() (*SearchVals200Response, *http.Response, error) {
-	return r.ApiService.MeLikesExecute(r)
+func (r ApiBranchesListRequest) Execute() (*BranchesList200Response, *http.Response, error) {
+	return r.ApiService.BranchesListExecute(r)
 }
 
 /*
-MeLikes Method for MeLikes
+BranchesList Method for BranchesList
 
-Get vals liked by the current user
+[BETA] List all branches for a project
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiMeLikesRequest
+ @param projectId Id of a project
+ @return ApiBranchesListRequest
 */
-func (a *MeAPIService) MeLikes(ctx context.Context) ApiMeLikesRequest {
-	return ApiMeLikesRequest{
+func (a *BetaAPIService) BranchesList(ctx context.Context, projectId string) ApiBranchesListRequest {
+	return ApiBranchesListRequest{
 		ApiService: a,
 		ctx: ctx,
+		projectId: projectId,
 	}
 }
 
 // Execute executes the request
-//  @return SearchVals200Response
-func (a *MeAPIService) MeLikesExecute(r ApiMeLikesRequest) (*SearchVals200Response, *http.Response, error) {
+//  @return BranchesList200Response
+func (a *BetaAPIService) BranchesListExecute(r ApiBranchesListRequest) (*BranchesList200Response, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *SearchVals200Response
+		localVarReturnValue  *BranchesList200Response
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MeAPIService.MeLikes")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BetaAPIService.BranchesList")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v1/me/likes"
+	localVarPath := localBasePath + "/v1/projects/{project_id}/branches"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -413,39 +264,142 @@ func (a *MeAPIService) MeLikesExecute(r ApiMeLikesRequest) (*SearchVals200Respon
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiMeProjectsRequest struct {
+type ApiProjectsGetRequest struct {
 	ctx context.Context
-	ApiService *MeAPIService
+	ApiService *BetaAPIService
+	projectId string
+}
+
+func (r ApiProjectsGetRequest) Execute() (*Project, *http.Response, error) {
+	return r.ApiService.ProjectsGetExecute(r)
+}
+
+/*
+ProjectsGet Method for ProjectsGet
+
+[BETA] Get a project by id
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param projectId Id of a project
+ @return ApiProjectsGetRequest
+*/
+func (a *BetaAPIService) ProjectsGet(ctx context.Context, projectId string) ApiProjectsGetRequest {
+	return ApiProjectsGetRequest{
+		ApiService: a,
+		ctx: ctx,
+		projectId: projectId,
+	}
+}
+
+// Execute executes the request
+//  @return Project
+func (a *BetaAPIService) ProjectsGetExecute(r ApiProjectsGetRequest) (*Project, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Project
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BetaAPIService.ProjectsGet")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/projects/{project_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiProjectsListRequest struct {
+	ctx context.Context
+	ApiService *BetaAPIService
 	offset *int32
 	limit *int32
 }
 
 // Number of items to skip in order to deliver paginated results
-func (r ApiMeProjectsRequest) Offset(offset int32) ApiMeProjectsRequest {
+func (r ApiProjectsListRequest) Offset(offset int32) ApiProjectsListRequest {
 	r.offset = &offset
 	return r
 }
 
 // Maximum items to return in each paginated response
-func (r ApiMeProjectsRequest) Limit(limit int32) ApiMeProjectsRequest {
+func (r ApiProjectsListRequest) Limit(limit int32) ApiProjectsListRequest {
 	r.limit = &limit
 	return r
 }
 
-func (r ApiMeProjectsRequest) Execute() (*MeProjects200Response, *http.Response, error) {
-	return r.ApiService.MeProjectsExecute(r)
+func (r ApiProjectsListRequest) Execute() (*MeProjects200Response, *http.Response, error) {
+	return r.ApiService.ProjectsListExecute(r)
 }
 
 /*
-MeProjects Method for MeProjects
+ProjectsList Method for ProjectsList
 
-[BETA] List all of a user's projects for authenticated users
+[BETA] Lists all public projects
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiMeProjectsRequest
+ @return ApiProjectsListRequest
 */
-func (a *MeAPIService) MeProjects(ctx context.Context) ApiMeProjectsRequest {
-	return ApiMeProjectsRequest{
+func (a *BetaAPIService) ProjectsList(ctx context.Context) ApiProjectsListRequest {
+	return ApiProjectsListRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -453,7 +407,7 @@ func (a *MeAPIService) MeProjects(ctx context.Context) ApiMeProjectsRequest {
 
 // Execute executes the request
 //  @return MeProjects200Response
-func (a *MeAPIService) MeProjectsExecute(r ApiMeProjectsRequest) (*MeProjects200Response, *http.Response, error) {
+func (a *BetaAPIService) ProjectsListExecute(r ApiProjectsListRequest) (*MeProjects200Response, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -461,12 +415,12 @@ func (a *MeAPIService) MeProjectsExecute(r ApiMeProjectsRequest) (*MeProjects200
 		localVarReturnValue  *MeProjects200Response
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MeAPIService.MeProjects")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "BetaAPIService.ProjectsList")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v1/me/projects"
+	localVarPath := localBasePath + "/v1/projects"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -489,156 +443,6 @@ func (a *MeAPIService) MeProjectsExecute(r ApiMeProjectsRequest) (*MeProjects200
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
 	parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiMeReferencesRequest struct {
-	ctx context.Context
-	ApiService *MeAPIService
-	offset *int32
-	limit *int32
-	since *time.Time
-	until *time.Time
-}
-
-// Number of items to skip in order to deliver paginated results
-func (r ApiMeReferencesRequest) Offset(offset int32) ApiMeReferencesRequest {
-	r.offset = &offset
-	return r
-}
-
-// Maximum items to return in each paginated response
-func (r ApiMeReferencesRequest) Limit(limit int32) ApiMeReferencesRequest {
-	r.limit = &limit
-	return r
-}
-
-// Include items created after this date
-func (r ApiMeReferencesRequest) Since(since time.Time) ApiMeReferencesRequest {
-	r.since = &since
-	return r
-}
-
-// Include items created before this date
-func (r ApiMeReferencesRequest) Until(until time.Time) ApiMeReferencesRequest {
-	r.until = &until
-	return r
-}
-
-func (r ApiMeReferencesRequest) Execute() (*MeReferences200Response, *http.Response, error) {
-	return r.ApiService.MeReferencesExecute(r)
-}
-
-/*
-MeReferences Method for MeReferences
-
-Get vals that depend on any of the user's vals
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiMeReferencesRequest
-*/
-func (a *MeAPIService) MeReferences(ctx context.Context) ApiMeReferencesRequest {
-	return ApiMeReferencesRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-// Execute executes the request
-//  @return MeReferences200Response
-func (a *MeAPIService) MeReferencesExecute(r ApiMeReferencesRequest) (*MeReferences200Response, *http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *MeReferences200Response
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MeAPIService.MeReferences")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/v1/me/references"
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.offset == nil {
-		return localVarReturnValue, nil, reportError("offset is required and must be specified")
-	}
-	if *r.offset < 0 {
-		return localVarReturnValue, nil, reportError("offset must be greater than 0")
-	}
-	if r.limit == nil {
-		return localVarReturnValue, nil, reportError("limit is required and must be specified")
-	}
-	if *r.limit < 1 {
-		return localVarReturnValue, nil, reportError("limit must be greater than 1")
-	}
-	if *r.limit > 100 {
-		return localVarReturnValue, nil, reportError("limit must be less than 100")
-	}
-
-	parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "")
-	if r.since != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "since", r.since, "")
-	}
-	if r.until != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "until", r.until, "")
-	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

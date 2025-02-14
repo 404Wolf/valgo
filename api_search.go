@@ -108,8 +108,8 @@ func (a *SearchAPIService) SearchValsExecute(r ApiSearchValsRequest) (*SearchVal
 	if strlen(*r.query) < 1 {
 		return localVarReturnValue, nil, reportError("query must have at least 1 elements")
 	}
-	if strlen(*r.query) > 512 {
-		return localVarReturnValue, nil, reportError("query must have less than 512 elements")
+	if strlen(*r.query) > 256 {
+		return localVarReturnValue, nil, reportError("query must have less than 256 elements")
 	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "")

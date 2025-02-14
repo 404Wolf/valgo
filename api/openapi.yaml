@@ -74,7 +74,7 @@ paths:
         name: query
         required: true
         schema:
-          maxLength: 512
+          maxLength: 256
           minLength: 1
           type: string
         style: form
@@ -106,7 +106,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-          description: Default Response
+          description: User object
       tags:
       - alias
   /v1/alias/{username}/{val_name}:
@@ -157,6 +157,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/meGet_200_response'
           description: "Your user information, with tier and email included"
+      tags:
+      - me
+  /v1/me/projects:
+    get:
+      description: "[BETA] List all of a user's projects for authenticated users"
+      operationId: meProjects
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/meProjects_200_response'
+          description: A paginated result set
+      security:
+      - bearerAuth: []
       tags:
       - me
   /v1/me/likes:
@@ -437,7 +474,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-          description: Default Response
+          description: User object
       tags:
       - users
   /v1/users/{user_id}/vals:
@@ -511,7 +548,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResultSet'
-          description: Default Response
+          description: Result of executing an SQL statement.
       security:
       - bearerAuth: []
       tags:
@@ -666,7 +703,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedVal'
-          description: Default Response
+          description: A Val
       security:
       - bearerAuth: []
       tags:
@@ -733,7 +770,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedVal'
-          description: Default Response
+          description: A Val
       tags:
       - vals
     put:
@@ -847,13 +884,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedVal'
-          description: Default Response
+          description: A Val
         "201":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedVal'
-          description: Default Response
+          description: A Val
       security:
       - bearerAuth: []
       tags:
@@ -939,7 +976,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtendedVal'
-          description: Default Response
+          description: A Val
       tags:
       - vals
   /v1/vals/{val_id}/evaluations/{evaluation_id}/cancel:
@@ -984,6 +1021,142 @@ paths:
       - bearerAuth: []
       tags:
       - vals
+  /v1/projects/{project_id}:
+    get:
+      description: "[BETA] Get a project by id"
+      operationId: projectsGet
+      parameters:
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: A Project
+      tags:
+      - beta
+  /v1/projects:
+    get:
+      description: "[BETA] Lists all public projects"
+      operationId: projectsList
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/meProjects_200_response'
+          description: A paginated result set
+      security:
+      - bearerAuth: []
+      tags:
+      - beta
+  /v1/projects/{project_id}/branches/{branch_id}:
+    get:
+      description: "[BETA] Get a branch by id"
+      operationId: branchesGet
+      parameters:
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: Id of a branch
+        explode: false
+        in: path
+        name: branch_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Branch'
+          description: A Branch
+      tags:
+      - beta
+  /v1/projects/{project_id}/branches:
+    get:
+      description: "[BETA] List all branches for a project"
+      operationId: branchesList
+      parameters:
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/branchesList_200_response'
+          description: A paginated result set
+      tags:
+      - beta
 components:
   schemas:
     User:
@@ -1130,8 +1303,8 @@ components:
           format: date-time
           type: string
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -1151,7 +1324,7 @@ components:
           - httpnext
           type: string
         url:
-          description: The URL of this val on the Val Town website
+          description: The URL of this resource on the Val Town website
           format: uri
           type: string
         links:
@@ -1226,8 +1399,8 @@ components:
           format: date-time
           type: string
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -1247,7 +1420,7 @@ components:
           - httpnext
           type: string
         url:
-          description: The URL of this val on the Val Town website
+          description: The URL of this resource on the Val Town website
           format: uri
           type: string
         links:
@@ -1287,6 +1460,101 @@ components:
           type: string
       required:
       - self
+    Project:
+      description: A Project
+      example:
+        valTownUrl: https://openapi-generator.tech
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        author:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          username: username
+        imageUrl: imageUrl
+        name: name
+        privacy: public
+        description: description
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        name:
+          type: string
+        id:
+          description: The id of the project
+          format: uuid
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        privacy:
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
+          enum:
+          - public
+          - unlisted
+          - private
+          type: string
+        valTownUrl:
+          description: The URL of this resource on the Val Town website
+          format: uri
+          type: string
+        author:
+          $ref: '#/components/schemas/meComments_200_response_data_inner_author'
+        description:
+          nullable: true
+          type: string
+        imageUrl:
+          description: The URL of this project's image
+          nullable: true
+          type: string
+      required:
+      - author
+      - createdAt
+      - description
+      - id
+      - imageUrl
+      - name
+      - privacy
+      - valTownUrl
+    Branch:
+      description: A Branch
+      example:
+        valTownUrl: https://openapi-generator.tech
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        forkedBranchId: forkedBranchId
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        version: 0
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          type: string
+        id:
+          description: The id of the branch
+          format: uuid
+          type: string
+        version:
+          minimum: 0
+          type: integer
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        forkedBranchId:
+          description: The id of the branch this branch was forked from
+          nullable: true
+          type: string
+        valTownUrl:
+          description: The URL of this resource on the Val Town website
+          format: uri
+          type: string
+      required:
+      - createdAt
+      - forkedBranchId
+      - id
+      - name
+      - updatedAt
+      - valTownUrl
+      - version
     searchVals_200_response:
       description: A paginated result set
       example:
@@ -1419,8 +1687,8 @@ components:
           format: date-time
           type: string
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -1440,7 +1708,7 @@ components:
           - httpnext
           type: string
         url:
-          description: The URL of this val on the Val Town website
+          description: The URL of this resource on the Val Town website
           format: uri
           type: string
         links:
@@ -1543,6 +1811,44 @@ components:
       - tier
       - url
       - username
+    meProjects_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - valTownUrl: https://openapi-generator.tech
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          author:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          imageUrl: imageUrl
+          name: name
+          privacy: public
+          description: description
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - valTownUrl: https://openapi-generator.tech
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          author:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            username: username
+          imageUrl: imageUrl
+          name: name
+          privacy: public
+          description: description
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Project'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
     meComments_200_response_data_inner_author:
       example:
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
@@ -1577,8 +1883,8 @@ components:
           minimum: 0
           type: integer
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -1976,8 +2282,8 @@ components:
           maxLength: 8192
           type: string
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -2011,8 +2317,8 @@ components:
           maxLength: 8192
           type: string
         privacy:
-          description: "This val’s privacy setting. Unlisted vals do not appear on\
-            \ profile pages or elsewhere, but you can link to them."
+          description: "This resource's privacy setting. Unlisted resources do not\
+            \ appear on profile pages or elsewhere, but you can link to them."
           enum:
           - public
           - unlisted
@@ -2084,6 +2390,38 @@ components:
           type: boolean
       required:
       - found
+    branchesList_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - valTownUrl: https://openapi-generator.tech
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          forkedBranchId: forkedBranchId
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          version: 0
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - valTownUrl: https://openapi-generator.tech
+          createdAt: 2000-01-23T04:56:07.000+00:00
+          forkedBranchId: forkedBranchId
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          version: 0
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Branch'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
     ResultSet_lastInsertRowid:
       anyOf:
       - type: string

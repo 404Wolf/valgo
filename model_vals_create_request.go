@@ -27,7 +27,7 @@ type ValsCreateRequest struct {
 	Name *string `json:"name,omitempty" validate:"regexp=^[a-zA-Z][a-zA-Z0-9_]*$"`
 	// Readme contents, as Markdown
 	Readme *string `json:"readme,omitempty"`
-	// This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them.
+	// This resource's privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them.
 	Privacy *string `json:"privacy,omitempty"`
 	// The type of the val you want to create. Note that this does not include interval vals, because they cannot be created through the API yet.
 	Type *string `json:"type,omitempty"`

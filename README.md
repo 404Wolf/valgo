@@ -84,6 +84,10 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AliasAPI* | [**AliasUsername**](docs/AliasAPI.md#aliasusername) | **Get** /v1/alias/{username} | 
 *AliasAPI* | [**AliasVal**](docs/AliasAPI.md#aliasval) | **Get** /v1/alias/{username}/{val_name} | 
+*BetaAPI* | [**BranchesGet**](docs/BetaAPI.md#branchesget) | **Get** /v1/projects/{project_id}/branches/{branch_id} | 
+*BetaAPI* | [**BranchesList**](docs/BetaAPI.md#brancheslist) | **Get** /v1/projects/{project_id}/branches | 
+*BetaAPI* | [**ProjectsGet**](docs/BetaAPI.md#projectsget) | **Get** /v1/projects/{project_id} | 
+*BetaAPI* | [**ProjectsList**](docs/BetaAPI.md#projectslist) | **Get** /v1/projects | 
 *BlobsAPI* | [**BlobsDelete**](docs/BlobsAPI.md#blobsdelete) | **Delete** /v1/blob/{key} | 
 *BlobsAPI* | [**BlobsGet**](docs/BlobsAPI.md#blobsget) | **Get** /v1/blob/{key} | 
 *BlobsAPI* | [**BlobsList**](docs/BlobsAPI.md#blobslist) | **Get** /v1/blob | 
@@ -92,6 +96,7 @@ Class | Method | HTTP request | Description
 *MeAPI* | [**MeComments**](docs/MeAPI.md#mecomments) | **Get** /v1/me/comments | 
 *MeAPI* | [**MeGet**](docs/MeAPI.md#meget) | **Get** /v1/me | 
 *MeAPI* | [**MeLikes**](docs/MeAPI.md#melikes) | **Get** /v1/me/likes | 
+*MeAPI* | [**MeProjects**](docs/MeAPI.md#meprojects) | **Get** /v1/me/projects | 
 *MeAPI* | [**MeReferences**](docs/MeAPI.md#mereferences) | **Get** /v1/me/references | 
 *SearchAPI* | [**SearchVals**](docs/SearchAPI.md#searchvals) | **Get** /v1/search/vals | 
 *SqliteAPI* | [**SqliteBatch**](docs/SqliteAPI.md#sqlitebatch) | **Post** /v1/sqlite/batch | 
@@ -120,6 +125,8 @@ Class | Method | HTTP request | Description
  - [AttachmentObject](docs/AttachmentObject.md)
  - [BasicVal](docs/BasicVal.md)
  - [BlobListingItem](docs/BlobListingItem.md)
+ - [Branch](docs/Branch.md)
+ - [BranchesList200Response](docs/BranchesList200Response.md)
  - [EmailData](docs/EmailData.md)
  - [EmailDataInput](docs/EmailDataInput.md)
  - [EmailNameAndAddress](docs/EmailNameAndAddress.md)
@@ -133,11 +140,13 @@ Class | Method | HTTP request | Description
  - [MeComments200ResponseDataInnerVal](docs/MeComments200ResponseDataInnerVal.md)
  - [MeGet200Response](docs/MeGet200Response.md)
  - [MeGet200ResponseLinks](docs/MeGet200ResponseLinks.md)
+ - [MeProjects200Response](docs/MeProjects200Response.md)
  - [MeReferences200Response](docs/MeReferences200Response.md)
  - [MeReferences200ResponseDataInner](docs/MeReferences200ResponseDataInner.md)
  - [MeReferences200ResponseDataInnerReference](docs/MeReferences200ResponseDataInnerReference.md)
  - [PaginationLinks](docs/PaginationLinks.md)
  - [ParameterizedQuery](docs/ParameterizedQuery.md)
+ - [Project](docs/Project.md)
  - [ReplyToList](docs/ReplyToList.md)
  - [ResultSet](docs/ResultSet.md)
  - [ResultSetLastInsertRowid](docs/ResultSetLastInsertRowid.md)

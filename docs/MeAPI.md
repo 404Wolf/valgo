@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**MeComments**](MeAPI.md#MeComments) | **Get** /v1/me/comments | 
 [**MeGet**](MeAPI.md#MeGet) | **Get** /v1/me | 
 [**MeLikes**](MeAPI.md#MeLikes) | **Get** /v1/me/likes | 
+[**MeProjects**](MeAPI.md#MeProjects) | **Get** /v1/me/projects | 
 [**MeReferences**](MeAPI.md#MeReferences) | **Get** /v1/me/references | 
 
 
@@ -204,6 +205,74 @@ Name | Type | Description  | Notes
 ### Authorization
 
 No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## MeProjects
+
+> MeProjects200Response MeProjects(ctx).Offset(offset).Limit(limit).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/404wolf/valgo"
+)
+
+func main() {
+	offset := int32(56) // int32 | Number of items to skip in order to deliver paginated results (default to 0)
+	limit := int32(56) // int32 | Maximum items to return in each paginated response (default to 20)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.MeAPI.MeProjects(context.Background()).Offset(offset).Limit(limit).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `MeAPI.MeProjects``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `MeProjects`: MeProjects200Response
+	fmt.Fprintf(os.Stdout, "Response from `MeAPI.MeProjects`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiMeProjectsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **offset** | **int32** | Number of items to skip in order to deliver paginated results | [default to 0]
+ **limit** | **int32** | Maximum items to return in each paginated response | [default to 20]
+
+### Return type
+
+[**MeProjects200Response**](MeProjects200Response.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

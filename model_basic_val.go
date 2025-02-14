@@ -33,11 +33,11 @@ type BasicVal struct {
 	// Whether this val is available publicly on Val Town
 	Public bool `json:"public"`
 	CreatedAt time.Time `json:"createdAt"`
-	// This val’s privacy setting. Unlisted vals do not appear on profile pages or elsewhere, but you can link to them.
+	// This resource's privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them.
 	Privacy string `json:"privacy"`
 	// The type of a val. HTTP can receive web requests, Email can receive emails, Cron runs periodically, and Script can be used for libraries or one-off calculations
 	Type string `json:"type"`
-	// The URL of this val on the Val Town website
+	// The URL of this resource on the Val Town website
 	Url string `json:"url"`
 	Links AliasVal200ResponseLinks `json:"links"`
 	Author NullableAliasVal200ResponseAuthor `json:"author"`
