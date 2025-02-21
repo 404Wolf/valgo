@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** | The name of this val | 
-**Id** | **string** | This val’s id | 
+**Id** | **string** | This val&#39;s id | 
 **Version** | **int32** | The version of this val, starting at zero | 
 **Code** | **NullableString** | TypeScript code associated with this val | 
 **Public** | **bool** | Whether this val is available publicly on Val Town | 
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **VersionCreatedAt** | Pointer to **time.Time** |  | [optional] 
 **LikeCount** | **int32** | How many likes this val has received | 
 **ReferenceCount** | **int32** |  | 
-**Readme** | **NullableString** | This val’s readme, as Markdown | 
+**Readme** | **NullableString** | This val&#39;s readme, as Markdown | 
 
 ## Methods
 

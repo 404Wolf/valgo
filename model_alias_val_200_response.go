@@ -24,7 +24,7 @@ var _ MappedNullable = &AliasVal200Response{}
 type AliasVal200Response struct {
 	// The name of this val
 	Name string `json:"name"`
-	// This val’s id
+	// This val's id
 	Id string `json:"id"`
 	// The version of this val, starting at zero
 	Version int32 `json:"version"`
@@ -45,7 +45,7 @@ type AliasVal200Response struct {
 	// How many likes this val has received
 	LikeCount int32 `json:"likeCount"`
 	ReferenceCount int32 `json:"referenceCount"`
-	// This val’s readme, as Markdown
+	// This val's readme, as Markdown
 	Readme NullableString `json:"readme"`
 }
 

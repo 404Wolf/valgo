@@ -1157,6 +1157,234 @@ paths:
           description: A paginated result set
       tags:
       - beta
+  /v1/projects/{project_id}/files:
+    get:
+      description: Get metadata for files and directories in a project at the root
+        directory
+      operationId: rootProjectFilesGet
+      parameters:
+      - description: Specific branch version to query
+        explode: true
+        in: query
+        name: version
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+        style: form
+      - description: Id to query
+        explode: true
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Whether to recursively list all files in the project
+        explode: true
+        in: query
+        name: recursive
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rootProjectFilesGet_200_response'
+          description: A paginated result set
+      tags:
+      - beta
+  /v1/projects/{project_id}/files/{path}:
+    get:
+      description: Get metadata for files and directories in a project at the specified
+        path
+      operationId: projectFilesGet
+      parameters:
+      - description: Specific branch version to query
+        explode: true
+        in: query
+        name: version
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+        style: form
+      - description: Id to query
+        explode: true
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Number of items to skip in order to deliver paginated results
+        explode: true
+        in: query
+        name: offset
+        required: true
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+        style: form
+      - description: Maximum items to return in each paginated response
+        explode: true
+        in: query
+        name: limit
+        required: true
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: URL encoded path to a file or directory (e.g. 'dir%2Fsubdir%2Ffile.ts')
+        explode: false
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rootProjectFilesGet_200_response'
+          description: A paginated result set
+      tags:
+      - beta
+  /v1/projects/{project_id}/files/{path}/content:
+    get:
+      description: Download file content
+      operationId: filesContentGet
+      parameters:
+      - description: Specific branch version to query
+        explode: true
+        in: query
+        name: version
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+        style: form
+      - description: Id to query
+        explode: true
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Id of a project
+        explode: false
+        in: path
+        name: project_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: URL encoded path to a file or directory (e.g. 'dir%2Fsubdir%2Ffile.ts')
+        explode: false
+        in: path
+        name: path
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: If-Match
+        required: false
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: If-Unmodified-Since
+        required: false
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: If-None-Match
+        required: false
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: If-Modified-Since
+        required: false
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: Cache-Control
+        required: false
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema: {}
+          description: Default Response
+        "304":
+          content:
+            application/json:
+              schema: {}
+          description: Default Response
+      tags:
+      - beta
 components:
   schemas:
     User:
@@ -1285,7 +1513,7 @@ components:
           description: The name of this val
           type: string
         id:
-          description: This val’s id
+          description: This val's id
           format: uuid
           type: string
         version:
@@ -1343,7 +1571,7 @@ components:
           type: integer
           descriptions: How many other public vals have imported this one
         readme:
-          description: "This val’s readme, as Markdown"
+          description: "This val's readme, as Markdown"
           nullable: true
           type: string
       required:
@@ -1381,7 +1609,7 @@ components:
           description: The name of this val
           type: string
         id:
-          description: This val’s id
+          description: This val's id
           format: uuid
           type: string
         version:
@@ -1555,6 +1783,54 @@ components:
       - updatedAt
       - valTownUrl
       - version
+    FileRevisionMetadata:
+      description: A File or Directory's Metadata
+      example:
+        path: path
+        name: name
+        links:
+          endpoint: endpoint
+          module: module
+          self: self
+          html: html
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: directory
+        version: 0
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        name:
+          type: string
+        id:
+          description: The id of the resource
+          format: uuid
+          type: string
+        path:
+          type: string
+        version:
+          minimum: 0
+          type: integer
+        updatedAt:
+          format: date-time
+          type: string
+        type:
+          enum:
+          - directory
+          - file
+          - interval
+          - http
+          - email
+          - script
+          type: string
+        links:
+          $ref: '#/components/schemas/FileRevisionMetadata_links'
+      required:
+      - id
+      - links
+      - name
+      - path
+      - type
+      - updatedAt
+      - version
     searchVals_200_response:
       description: A paginated result set
       example:
@@ -1609,15 +1885,15 @@ components:
           format: uri
           type: string
         versions:
-          description: The endpoint to retrieve this val’s versions
+          description: The endpoint to retrieve this val's versions
           format: uri
           type: string
         module:
-          description: The URL of this Val’s source code as a module
+          description: The URL of this Val's source code as a module
           format: uri
           type: string
         endpoint:
-          description: "This val’s web endpoint, where it serves a website or API"
+          description: "This val's web endpoint, where it serves a website or API"
           format: uri
           type: string
       required:
@@ -1669,7 +1945,7 @@ components:
           description: The name of this val
           type: string
         id:
-          description: This val’s id
+          description: This val's id
           format: uuid
           type: string
         version:
@@ -1727,7 +2003,7 @@ components:
           type: integer
           descriptions: How many other public vals have imported this one
         readme:
-          description: "This val’s readme, as Markdown"
+          description: "This val's readme, as Markdown"
           nullable: true
           type: string
       required:
@@ -2422,6 +2698,46 @@ components:
       required:
       - data
       - links
+    rootProjectFilesGet_200_response:
+      description: A paginated result set
+      example:
+        data:
+        - path: path
+          name: name
+          links:
+            endpoint: endpoint
+            module: module
+            self: self
+            html: html
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: directory
+          version: 0
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        - path: path
+          name: name
+          links:
+            endpoint: endpoint
+            module: module
+            self: self
+            html: html
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: directory
+          version: 0
+          updatedAt: 2000-01-23T04:56:07.000+00:00
+        links:
+          next: https://openapi-generator.tech
+          prev: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FileRevisionMetadata'
+          type: array
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+      required:
+      - data
+      - links
     ResultSet_lastInsertRowid:
       anyOf:
       - type: string
@@ -2431,6 +2747,28 @@ components:
 
         This value is not specified if the SQL statement was not an INSERT or if the table was not a ROWID table.
       nullable: true
+    FileRevisionMetadata_links:
+      example:
+        endpoint: endpoint
+        module: module
+        self: self
+        html: html
+      properties:
+        self:
+          nullable: true
+          type: string
+        module:
+          type: string
+        endpoint:
+          nullable: true
+          type: string
+        html:
+          type: string
+      required:
+      - endpoint
+      - html
+      - module
+      - self
   securitySchemes:
     bearerAuth:
       description: "Endpoints that support authorization expect Bearer authentication,\

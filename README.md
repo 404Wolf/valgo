@@ -86,8 +86,11 @@ Class | Method | HTTP request | Description
 *AliasAPI* | [**AliasVal**](docs/AliasAPI.md#aliasval) | **Get** /v1/alias/{username}/{val_name} | 
 *BetaAPI* | [**BranchesGet**](docs/BetaAPI.md#branchesget) | **Get** /v1/projects/{project_id}/branches/{branch_id} | 
 *BetaAPI* | [**BranchesList**](docs/BetaAPI.md#brancheslist) | **Get** /v1/projects/{project_id}/branches | 
+*BetaAPI* | [**FilesContentGet**](docs/BetaAPI.md#filescontentget) | **Get** /v1/projects/{project_id}/files/{path}/content | 
+*BetaAPI* | [**ProjectFilesGet**](docs/BetaAPI.md#projectfilesget) | **Get** /v1/projects/{project_id}/files/{path} | 
 *BetaAPI* | [**ProjectsGet**](docs/BetaAPI.md#projectsget) | **Get** /v1/projects/{project_id} | 
 *BetaAPI* | [**ProjectsList**](docs/BetaAPI.md#projectslist) | **Get** /v1/projects | 
+*BetaAPI* | [**RootProjectFilesGet**](docs/BetaAPI.md#rootprojectfilesget) | **Get** /v1/projects/{project_id}/files | 
 *BlobsAPI* | [**BlobsDelete**](docs/BlobsAPI.md#blobsdelete) | **Delete** /v1/blob/{key} | 
 *BlobsAPI* | [**BlobsGet**](docs/BlobsAPI.md#blobsget) | **Get** /v1/blob/{key} | 
 *BlobsAPI* | [**BlobsList**](docs/BlobsAPI.md#blobslist) | **Get** /v1/blob | 
@@ -134,6 +137,8 @@ Class | Method | HTTP request | Description
  - [EmailsSend500Response](docs/EmailsSend500Response.md)
  - [EmailsSendRequest](docs/EmailsSendRequest.md)
  - [ExtendedVal](docs/ExtendedVal.md)
+ - [FileRevisionMetadata](docs/FileRevisionMetadata.md)
+ - [FileRevisionMetadataLinks](docs/FileRevisionMetadataLinks.md)
  - [MeComments200Response](docs/MeComments200Response.md)
  - [MeComments200ResponseDataInner](docs/MeComments200ResponseDataInner.md)
  - [MeComments200ResponseDataInnerAuthor](docs/MeComments200ResponseDataInnerAuthor.md)
@@ -150,6 +155,7 @@ Class | Method | HTTP request | Description
  - [ReplyToList](docs/ReplyToList.md)
  - [ResultSet](docs/ResultSet.md)
  - [ResultSetLastInsertRowid](docs/ResultSetLastInsertRowid.md)
+ - [RootProjectFilesGet200Response](docs/RootProjectFilesGet200Response.md)
  - [RunPostRequest](docs/RunPostRequest.md)
  - [SearchVals200Response](docs/SearchVals200Response.md)
  - [SqliteBatchRequest](docs/SqliteBatchRequest.md)

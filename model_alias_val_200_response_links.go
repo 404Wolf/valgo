@@ -23,11 +23,11 @@ var _ MappedNullable = &AliasVal200ResponseLinks{}
 type AliasVal200ResponseLinks struct {
 	// The URL of this val on this API
 	Self string `json:"self"`
-	// The endpoint to retrieve this val’s versions
+	// The endpoint to retrieve this val's versions
 	Versions string `json:"versions"`
-	// The URL of this Val’s source code as a module
+	// The URL of this Val's source code as a module
 	Module string `json:"module"`
-	// This val’s web endpoint, where it serves a website or API
+	// This val's web endpoint, where it serves a website or API
 	Endpoint *string `json:"endpoint,omitempty"`
 }
 

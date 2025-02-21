@@ -32,6 +32,8 @@ docs/EmailsSend200Response.md
 docs/EmailsSend500Response.md
 docs/EmailsSendRequest.md
 docs/ExtendedVal.md
+docs/FileRevisionMetadata.md
+docs/FileRevisionMetadataLinks.md
 docs/MeAPI.md
 docs/MeComments200Response.md
 docs/MeComments200ResponseDataInner.md
@@ -49,6 +51,7 @@ docs/Project.md
 docs/ReplyToList.md
 docs/ResultSet.md
 docs/ResultSetLastInsertRowid.md
+docs/RootProjectFilesGet200Response.md
 docs/RunPostRequest.md
 docs/SearchAPI.md
 docs/SearchVals200Response.md
@@ -84,6 +87,8 @@ model_emails_send_200_response.go
 model_emails_send_500_response.go
 model_emails_send_request.go
 model_extended_val.go
+model_file_revision_metadata.go
+model_file_revision_metadata_links.go
 model_me_comments_200_response.go
 model_me_comments_200_response_data_inner.go
 model_me_comments_200_response_data_inner_author.go
@@ -100,6 +105,7 @@ model_project.go
 model_reply_to_list.go
 model_result_set.go
 model_result_set_last_insert_rowid.go
+model_root_project_files_get_200_response.go
 model_run_post_request.go
 model_search_vals_200_response.go
 model_sqlite_batch_request.go
@@ -114,5 +120,4 @@ model_vals_list_200_response_data_inner.go
 model_vals_put_request.go
 model_vals_update_request.go
 response.go
-test/api_beta_test.go
 utils.go

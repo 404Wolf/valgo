@@ -5,9 +5,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Self** | **string** | The URL of this val on this API | 
-**Versions** | **string** | The endpoint to retrieve this val’s versions | 
-**Module** | **string** | The URL of this Val’s source code as a module | 
-**Endpoint** | Pointer to **string** | This val’s web endpoint, where it serves a website or API | [optional] 
+**Versions** | **string** | The endpoint to retrieve this val&#39;s versions | 
+**Module** | **string** | The URL of this Val&#39;s source code as a module | 
+**Endpoint** | Pointer to **string** | This val&#39;s web endpoint, where it serves a website or API | [optional] 
 
 ## Methods
 

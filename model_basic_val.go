@@ -24,7 +24,7 @@ var _ MappedNullable = &BasicVal{}
 type BasicVal struct {
 	// The name of this val
 	Name string `json:"name"`
-	// This val’s id
+	// This val's id
 	Id string `json:"id"`
 	// The version of this val, starting at zero
 	Version int32 `json:"version"`
