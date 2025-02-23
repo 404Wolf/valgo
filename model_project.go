@@ -28,12 +28,11 @@ type Project struct {
 	CreatedAt time.Time `json:"createdAt"`
 	// This resource's privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them.
 	Privacy string `json:"privacy"`
-	// The URL of this resource on the Val Town website
-	ValTownUrl string `json:"valTownUrl"`
 	Author MeComments200ResponseDataInnerAuthor `json:"author"`
 	Description NullableString `json:"description"`
 	// The URL of this project's image
 	ImageUrl NullableString `json:"imageUrl"`
+	Links ProjectLinks `json:"links"`
 }
 
 type _Project Project
@@ -42,16 +41,16 @@ type _Project Project
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProject(name string, id string, createdAt time.Time, privacy string, valTownUrl string, author MeComments200ResponseDataInnerAuthor, description NullableString, imageUrl NullableString) *Project {
+func NewProject(name string, id string, createdAt time.Time, privacy string, author MeComments200ResponseDataInnerAuthor, description NullableString, imageUrl NullableString, links ProjectLinks) *Project {
 	this := Project{}
 	this.Name = name
 	this.Id = id
 	this.CreatedAt = createdAt
 	this.Privacy = privacy
-	this.ValTownUrl = valTownUrl
 	this.Author = author
 	this.Description = description
 	this.ImageUrl = imageUrl
+	this.Links = links
 	return &this
 }
 
@@ -159,30 +158,6 @@ func (o *Project) SetPrivacy(v string) {
 	o.Privacy = v
 }
 
-// GetValTownUrl returns the ValTownUrl field value
-func (o *Project) GetValTownUrl() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.ValTownUrl
-}
-
-// GetValTownUrlOk returns a tuple with the ValTownUrl field value
-// and a boolean to check if the value has been set.
-func (o *Project) GetValTownUrlOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.ValTownUrl, true
-}
-
-// SetValTownUrl sets field value
-func (o *Project) SetValTownUrl(v string) {
-	o.ValTownUrl = v
-}
-
 // GetAuthor returns the Author field value
 func (o *Project) GetAuthor() MeComments200ResponseDataInnerAuthor {
 	if o == nil {
@@ -259,6 +234,30 @@ func (o *Project) SetImageUrl(v string) {
 	o.ImageUrl.Set(&v)
 }
 
+// GetLinks returns the Links field value
+func (o *Project) GetLinks() ProjectLinks {
+	if o == nil {
+		var ret ProjectLinks
+		return ret
+	}
+
+	return o.Links
+}
+
+// GetLinksOk returns a tuple with the Links field value
+// and a boolean to check if the value has been set.
+func (o *Project) GetLinksOk() (*ProjectLinks, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Links, true
+}
+
+// SetLinks sets field value
+func (o *Project) SetLinks(v ProjectLinks) {
+	o.Links = v
+}
+
 func (o Project) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -273,10 +272,10 @@ func (o Project) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["createdAt"] = o.CreatedAt
 	toSerialize["privacy"] = o.Privacy
-	toSerialize["valTownUrl"] = o.ValTownUrl
 	toSerialize["author"] = o.Author
 	toSerialize["description"] = o.Description.Get()
 	toSerialize["imageUrl"] = o.ImageUrl.Get()
+	toSerialize["links"] = o.Links
 	return toSerialize, nil
 }
 
@@ -289,10 +288,10 @@ func (o *Project) UnmarshalJSON(data []byte) (err error) {
 		"id",
 		"createdAt",
 		"privacy",
-		"valTownUrl",
 		"author",
 		"description",
 		"imageUrl",
+		"links",
 	}
 
 	allProperties := make(map[string]interface{})

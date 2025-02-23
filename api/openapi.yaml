@@ -1691,7 +1691,6 @@ components:
     Project:
       description: A Project
       example:
-        valTownUrl: https://openapi-generator.tech
         createdAt: 2000-01-23T04:56:07.000+00:00
         author:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
@@ -1700,6 +1699,9 @@ components:
         name: name
         privacy: public
         description: description
+        links:
+          self: https://openapi-generator.tech
+          html: https://openapi-generator.tech
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       properties:
         name:
@@ -1719,10 +1721,6 @@ components:
           - unlisted
           - private
           type: string
-        valTownUrl:
-          description: The URL of this resource on the Val Town website
-          format: uri
-          type: string
         author:
           $ref: '#/components/schemas/meComments_200_response_data_inner_author'
         description:
@@ -1732,22 +1730,26 @@ components:
           description: The URL of this project's image
           nullable: true
           type: string
+        links:
+          $ref: '#/components/schemas/Project_links'
       required:
       - author
       - createdAt
       - description
       - id
       - imageUrl
+      - links
       - name
       - privacy
-      - valTownUrl
     Branch:
       description: A Branch
       example:
-        valTownUrl: https://openapi-generator.tech
         createdAt: 2000-01-23T04:56:07.000+00:00
         forkedBranchId: forkedBranchId
         name: name
+        links:
+          self: https://openapi-generator.tech
+          html: https://openapi-generator.tech
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         version: 0
         updatedAt: 2000-01-23T04:56:07.000+00:00
@@ -1771,17 +1773,15 @@ components:
           description: The id of the branch this branch was forked from
           nullable: true
           type: string
-        valTownUrl:
-          description: The URL of this resource on the Val Town website
-          format: uri
-          type: string
+        links:
+          $ref: '#/components/schemas/Project_links'
       required:
       - createdAt
       - forkedBranchId
       - id
+      - links
       - name
       - updatedAt
-      - valTownUrl
       - version
     FileRevisionMetadata:
       description: A File or Directory's Metadata
@@ -1789,10 +1789,10 @@ components:
         path: path
         name: name
         links:
-          endpoint: endpoint
-          module: module
-          self: self
-          html: html
+          endpoint: https://openapi-generator.tech
+          module: https://openapi-generator.tech
+          self: https://openapi-generator.tech
+          html: https://openapi-generator.tech
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         type: directory
         version: 0
@@ -2091,8 +2091,7 @@ components:
       description: A paginated result set
       example:
         data:
-        - valTownUrl: https://openapi-generator.tech
-          createdAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
           author:
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             username: username
@@ -2100,9 +2099,11 @@ components:
           name: name
           privacy: public
           description: description
+          links:
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        - valTownUrl: https://openapi-generator.tech
-          createdAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
           author:
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
             username: username
@@ -2110,6 +2111,9 @@ components:
           name: name
           privacy: public
           description: description
+          links:
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         links:
           next: https://openapi-generator.tech
@@ -2670,17 +2674,21 @@ components:
       description: A paginated result set
       example:
         data:
-        - valTownUrl: https://openapi-generator.tech
-          createdAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
           forkedBranchId: forkedBranchId
           name: name
+          links:
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           version: 0
           updatedAt: 2000-01-23T04:56:07.000+00:00
-        - valTownUrl: https://openapi-generator.tech
-          createdAt: 2000-01-23T04:56:07.000+00:00
+        - createdAt: 2000-01-23T04:56:07.000+00:00
           forkedBranchId: forkedBranchId
           name: name
+          links:
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           version: 0
           updatedAt: 2000-01-23T04:56:07.000+00:00
@@ -2705,10 +2713,10 @@ components:
         - path: path
           name: name
           links:
-            endpoint: endpoint
-            module: module
-            self: self
-            html: html
+            endpoint: https://openapi-generator.tech
+            module: https://openapi-generator.tech
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           type: directory
           version: 0
@@ -2716,10 +2724,10 @@ components:
         - path: path
           name: name
           links:
-            endpoint: endpoint
-            module: module
-            self: self
-            html: html
+            endpoint: https://openapi-generator.tech
+            module: https://openapi-generator.tech
+            self: https://openapi-generator.tech
+            html: https://openapi-generator.tech
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           type: directory
           version: 0
@@ -2747,25 +2755,47 @@ components:
 
         This value is not specified if the SQL statement was not an INSERT or if the table was not a ROWID table.
       nullable: true
-    FileRevisionMetadata_links:
+    Project_links:
       example:
-        endpoint: endpoint
-        module: module
-        self: self
-        html: html
+        self: https://openapi-generator.tech
+        html: https://openapi-generator.tech
       properties:
         self:
-          nullable: true
-          type: string
-        module:
-          type: string
-        endpoint:
-          nullable: true
+          description: The URL of this resource on this API
+          format: uri
           type: string
         html:
+          description: The URL of this resource on Val Town
+          format: uri
           type: string
       required:
-      - endpoint
+      - html
+      - self
+    FileRevisionMetadata_links:
+      example:
+        endpoint: https://openapi-generator.tech
+        module: https://openapi-generator.tech
+        self: https://openapi-generator.tech
+        html: https://openapi-generator.tech
+      properties:
+        self:
+          description: The URL of this resource on this API
+          format: uri
+          type: string
+        html:
+          description: The URL of this resource on Val Town
+          format: uri
+          type: string
+        module:
+          description: The URL of this resource's source code as a module
+          format: uri
+          type: string
+        endpoint:
+          description: "This resource's web endpoint, where it serves a website or\
+            \ API"
+          format: uri
+          type: string
+      required:
       - html
       - module
       - self

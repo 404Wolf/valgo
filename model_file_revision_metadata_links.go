@@ -21,10 +21,14 @@ var _ MappedNullable = &FileRevisionMetadataLinks{}
 
 // FileRevisionMetadataLinks struct for FileRevisionMetadataLinks
 type FileRevisionMetadataLinks struct {
-	Self NullableString `json:"self"`
-	Module string `json:"module"`
-	Endpoint NullableString `json:"endpoint"`
+	// The URL of this resource on this API
+	Self string `json:"self"`
+	// The URL of this resource on Val Town
 	Html string `json:"html"`
+	// The URL of this resource's source code as a module
+	Module string `json:"module"`
+	// This resource's web endpoint, where it serves a website or API
+	Endpoint *string `json:"endpoint,omitempty"`
 }
 
 type _FileRevisionMetadataLinks FileRevisionMetadataLinks
@@ -33,12 +37,11 @@ type _FileRevisionMetadataLinks FileRevisionMetadataLinks
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewFileRevisionMetadataLinks(self NullableString, module string, endpoint NullableString, html string) *FileRevisionMetadataLinks {
+func NewFileRevisionMetadataLinks(self string, html string, module string) *FileRevisionMetadataLinks {
 	this := FileRevisionMetadataLinks{}
 	this.Self = self
-	this.Module = module
-	this.Endpoint = endpoint
 	this.Html = html
+	this.Module = module
 	return &this
 }
 
@@ -51,79 +54,27 @@ func NewFileRevisionMetadataLinksWithDefaults() *FileRevisionMetadataLinks {
 }
 
 // GetSelf returns the Self field value
-// If the value is explicit nil, the zero value for string will be returned
 func (o *FileRevisionMetadataLinks) GetSelf() string {
-	if o == nil || o.Self.Get() == nil {
+	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return *o.Self.Get()
+	return o.Self
 }
 
 // GetSelfOk returns a tuple with the Self field value
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *FileRevisionMetadataLinks) GetSelfOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.Self.Get(), o.Self.IsSet()
+	return &o.Self, true
 }
 
 // SetSelf sets field value
 func (o *FileRevisionMetadataLinks) SetSelf(v string) {
-	o.Self.Set(&v)
-}
-
-// GetModule returns the Module field value
-func (o *FileRevisionMetadataLinks) GetModule() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Module
-}
-
-// GetModuleOk returns a tuple with the Module field value
-// and a boolean to check if the value has been set.
-func (o *FileRevisionMetadataLinks) GetModuleOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Module, true
-}
-
-// SetModule sets field value
-func (o *FileRevisionMetadataLinks) SetModule(v string) {
-	o.Module = v
-}
-
-// GetEndpoint returns the Endpoint field value
-// If the value is explicit nil, the zero value for string will be returned
-func (o *FileRevisionMetadataLinks) GetEndpoint() string {
-	if o == nil || o.Endpoint.Get() == nil {
-		var ret string
-		return ret
-	}
-
-	return *o.Endpoint.Get()
-}
-
-// GetEndpointOk returns a tuple with the Endpoint field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *FileRevisionMetadataLinks) GetEndpointOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Endpoint.Get(), o.Endpoint.IsSet()
-}
-
-// SetEndpoint sets field value
-func (o *FileRevisionMetadataLinks) SetEndpoint(v string) {
-	o.Endpoint.Set(&v)
+	o.Self = v
 }
 
 // GetHtml returns the Html field value
@@ -150,6 +101,62 @@ func (o *FileRevisionMetadataLinks) SetHtml(v string) {
 	o.Html = v
 }
 
+// GetModule returns the Module field value
+func (o *FileRevisionMetadataLinks) GetModule() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Module
+}
+
+// GetModuleOk returns a tuple with the Module field value
+// and a boolean to check if the value has been set.
+func (o *FileRevisionMetadataLinks) GetModuleOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Module, true
+}
+
+// SetModule sets field value
+func (o *FileRevisionMetadataLinks) SetModule(v string) {
+	o.Module = v
+}
+
+// GetEndpoint returns the Endpoint field value if set, zero value otherwise.
+func (o *FileRevisionMetadataLinks) GetEndpoint() string {
+	if o == nil || IsNil(o.Endpoint) {
+		var ret string
+		return ret
+	}
+	return *o.Endpoint
+}
+
+// GetEndpointOk returns a tuple with the Endpoint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FileRevisionMetadataLinks) GetEndpointOk() (*string, bool) {
+	if o == nil || IsNil(o.Endpoint) {
+		return nil, false
+	}
+	return o.Endpoint, true
+}
+
+// HasEndpoint returns a boolean if a field has been set.
+func (o *FileRevisionMetadataLinks) HasEndpoint() bool {
+	if o != nil && !IsNil(o.Endpoint) {
+		return true
+	}
+
+	return false
+}
+
+// SetEndpoint gets a reference to the given string and assigns it to the Endpoint field.
+func (o *FileRevisionMetadataLinks) SetEndpoint(v string) {
+	o.Endpoint = &v
+}
+
 func (o FileRevisionMetadataLinks) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -160,10 +167,12 @@ func (o FileRevisionMetadataLinks) MarshalJSON() ([]byte, error) {
 
 func (o FileRevisionMetadataLinks) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["self"] = o.Self.Get()
-	toSerialize["module"] = o.Module
-	toSerialize["endpoint"] = o.Endpoint.Get()
+	toSerialize["self"] = o.Self
 	toSerialize["html"] = o.Html
+	toSerialize["module"] = o.Module
+	if !IsNil(o.Endpoint) {
+		toSerialize["endpoint"] = o.Endpoint
+	}
 	return toSerialize, nil
 }
 
@@ -173,9 +182,8 @@ func (o *FileRevisionMetadataLinks) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"self",
-		"module",
-		"endpoint",
 		"html",
+		"module",
 	}
 
 	allProperties := make(map[string]interface{})

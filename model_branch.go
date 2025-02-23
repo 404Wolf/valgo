@@ -30,8 +30,7 @@ type Branch struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 	// The id of the branch this branch was forked from
 	ForkedBranchId NullableString `json:"forkedBranchId"`
-	// The URL of this resource on the Val Town website
-	ValTownUrl string `json:"valTownUrl"`
+	Links ProjectLinks `json:"links"`
 }
 
 type _Branch Branch
@@ -40,7 +39,7 @@ type _Branch Branch
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBranch(name string, id string, version int32, createdAt time.Time, updatedAt time.Time, forkedBranchId NullableString, valTownUrl string) *Branch {
+func NewBranch(name string, id string, version int32, createdAt time.Time, updatedAt time.Time, forkedBranchId NullableString, links ProjectLinks) *Branch {
 	this := Branch{}
 	this.Name = name
 	this.Id = id
@@ -48,7 +47,7 @@ func NewBranch(name string, id string, version int32, createdAt time.Time, updat
 	this.CreatedAt = createdAt
 	this.UpdatedAt = updatedAt
 	this.ForkedBranchId = forkedBranchId
-	this.ValTownUrl = valTownUrl
+	this.Links = links
 	return &this
 }
 
@@ -206,28 +205,28 @@ func (o *Branch) SetForkedBranchId(v string) {
 	o.ForkedBranchId.Set(&v)
 }
 
-// GetValTownUrl returns the ValTownUrl field value
-func (o *Branch) GetValTownUrl() string {
+// GetLinks returns the Links field value
+func (o *Branch) GetLinks() ProjectLinks {
 	if o == nil {
-		var ret string
+		var ret ProjectLinks
 		return ret
 	}
 
-	return o.ValTownUrl
+	return o.Links
 }
 
-// GetValTownUrlOk returns a tuple with the ValTownUrl field value
+// GetLinksOk returns a tuple with the Links field value
 // and a boolean to check if the value has been set.
-func (o *Branch) GetValTownUrlOk() (*string, bool) {
+func (o *Branch) GetLinksOk() (*ProjectLinks, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.ValTownUrl, true
+	return &o.Links, true
 }
 
-// SetValTownUrl sets field value
-func (o *Branch) SetValTownUrl(v string) {
-	o.ValTownUrl = v
+// SetLinks sets field value
+func (o *Branch) SetLinks(v ProjectLinks) {
+	o.Links = v
 }
 
 func (o Branch) MarshalJSON() ([]byte, error) {
@@ -246,7 +245,7 @@ func (o Branch) ToMap() (map[string]interface{}, error) {
 	toSerialize["createdAt"] = o.CreatedAt
 	toSerialize["updatedAt"] = o.UpdatedAt
 	toSerialize["forkedBranchId"] = o.ForkedBranchId.Get()
-	toSerialize["valTownUrl"] = o.ValTownUrl
+	toSerialize["links"] = o.Links
 	return toSerialize, nil
 }
 
@@ -261,7 +260,7 @@ func (o *Branch) UnmarshalJSON(data []byte) (err error) {
 		"createdAt",
 		"updatedAt",
 		"forkedBranchId",
-		"valTownUrl",
+		"links",
 	}
 
 	allProperties := make(map[string]interface{})

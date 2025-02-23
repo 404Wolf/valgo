@@ -4,16 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Self** | **NullableString** |  | 
-**Module** | **string** |  | 
-**Endpoint** | **NullableString** |  | 
-**Html** | **string** |  | 
+**Self** | **string** | The URL of this resource on this API | 
+**Html** | **string** | The URL of this resource on Val Town | 
+**Module** | **string** | The URL of this resource&#39;s source code as a module | 
+**Endpoint** | Pointer to **string** | This resource&#39;s web endpoint, where it serves a website or API | [optional] 
 
 ## Methods
 
 ### NewFileRevisionMetadataLinks
 
-`func NewFileRevisionMetadataLinks(self NullableString, module string, endpoint NullableString, html string, ) *FileRevisionMetadataLinks`
+`func NewFileRevisionMetadataLinks(self string, html string, module string, ) *FileRevisionMetadataLinks`
 
 NewFileRevisionMetadataLinks instantiates a new FileRevisionMetadataLinks object
 This constructor will assign default values to properties that have it defined,
@@ -48,16 +48,26 @@ and a boolean to check if the value has been set.
 SetSelf sets Self field to given value.
 
 
-### SetSelfNil
+### GetHtml
 
-`func (o *FileRevisionMetadataLinks) SetSelfNil(b bool)`
+`func (o *FileRevisionMetadataLinks) GetHtml() string`
 
- SetSelfNil sets the value for Self to be an explicit nil
+GetHtml returns the Html field if non-nil, zero value otherwise.
 
-### UnsetSelf
-`func (o *FileRevisionMetadataLinks) UnsetSelf()`
+### GetHtmlOk
 
-UnsetSelf ensures that no value is present for Self, not even an explicit nil
+`func (o *FileRevisionMetadataLinks) GetHtmlOk() (*string, bool)`
+
+GetHtmlOk returns a tuple with the Html field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHtml
+
+`func (o *FileRevisionMetadataLinks) SetHtml(v string)`
+
+SetHtml sets Html field to given value.
+
+
 ### GetModule
 
 `func (o *FileRevisionMetadataLinks) GetModule() string`
@@ -97,36 +107,11 @@ and a boolean to check if the value has been set.
 
 SetEndpoint sets Endpoint field to given value.
 
+### HasEndpoint
 
-### SetEndpointNil
+`func (o *FileRevisionMetadataLinks) HasEndpoint() bool`
 
-`func (o *FileRevisionMetadataLinks) SetEndpointNil(b bool)`
-
- SetEndpointNil sets the value for Endpoint to be an explicit nil
-
-### UnsetEndpoint
-`func (o *FileRevisionMetadataLinks) UnsetEndpoint()`
-
-UnsetEndpoint ensures that no value is present for Endpoint, not even an explicit nil
-### GetHtml
-
-`func (o *FileRevisionMetadataLinks) GetHtml() string`
-
-GetHtml returns the Html field if non-nil, zero value otherwise.
-
-### GetHtmlOk
-
-`func (o *FileRevisionMetadataLinks) GetHtmlOk() (*string, bool)`
-
-GetHtmlOk returns a tuple with the Html field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetHtml
-
-`func (o *FileRevisionMetadataLinks) SetHtml(v string)`
-
-SetHtml sets Html field to given value.
-
+HasEndpoint returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

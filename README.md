@@ -152,6 +152,7 @@ Class | Method | HTTP request | Description
  - [PaginationLinks](docs/PaginationLinks.md)
  - [ParameterizedQuery](docs/ParameterizedQuery.md)
  - [Project](docs/Project.md)
+ - [ProjectLinks](docs/ProjectLinks.md)
  - [ReplyToList](docs/ReplyToList.md)
  - [ResultSet](docs/ResultSet.md)
  - [ResultSetLastInsertRowid](docs/ResultSetLastInsertRowid.md)

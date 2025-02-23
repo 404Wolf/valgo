@@ -10,13 +10,13 @@ Name | Type | Description | Notes
 **CreatedAt** | **time.Time** |  | 
 **UpdatedAt** | **time.Time** |  | 
 **ForkedBranchId** | **NullableString** | The id of the branch this branch was forked from | 
-**ValTownUrl** | **string** | The URL of this resource on the Val Town website | 
+**Links** | [**ProjectLinks**](ProjectLinks.md) |  | 
 
 ## Methods
 
 ### NewBranch
 
-`func NewBranch(name string, id string, version int32, createdAt time.Time, updatedAt time.Time, forkedBranchId NullableString, valTownUrl string, ) *Branch`
+`func NewBranch(name string, id string, version int32, createdAt time.Time, updatedAt time.Time, forkedBranchId NullableString, links ProjectLinks, ) *Branch`
 
 NewBranch instantiates a new Branch object
 This constructor will assign default values to properties that have it defined,
@@ -161,24 +161,24 @@ SetForkedBranchId sets ForkedBranchId field to given value.
 `func (o *Branch) UnsetForkedBranchId()`
 
 UnsetForkedBranchId ensures that no value is present for ForkedBranchId, not even an explicit nil
-### GetValTownUrl
+### GetLinks
 
-`func (o *Branch) GetValTownUrl() string`
+`func (o *Branch) GetLinks() ProjectLinks`
 
-GetValTownUrl returns the ValTownUrl field if non-nil, zero value otherwise.
+GetLinks returns the Links field if non-nil, zero value otherwise.
 
-### GetValTownUrlOk
+### GetLinksOk
 
-`func (o *Branch) GetValTownUrlOk() (*string, bool)`
+`func (o *Branch) GetLinksOk() (*ProjectLinks, bool)`
 
-GetValTownUrlOk returns a tuple with the ValTownUrl field if it's non-nil, zero value otherwise
+GetLinksOk returns a tuple with the Links field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetValTownUrl
+### SetLinks
 
-`func (o *Branch) SetValTownUrl(v string)`
+`func (o *Branch) SetLinks(v ProjectLinks)`
 
-SetValTownUrl sets ValTownUrl field to given value.
+SetLinks sets Links field to given value.
 
 
 

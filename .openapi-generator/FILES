@@ -48,6 +48,7 @@ docs/MeReferences200ResponseDataInnerReference.md
 docs/PaginationLinks.md
 docs/ParameterizedQuery.md
 docs/Project.md
+docs/ProjectLinks.md
 docs/ReplyToList.md
 docs/ResultSet.md
 docs/ResultSetLastInsertRowid.md
@@ -102,6 +103,7 @@ model_me_references_200_response_data_inner_reference.go
 model_pagination_links.go
 model_parameterized_query.go
 model_project.go
+model_project_links.go
 model_reply_to_list.go
 model_result_set.go
 model_result_set_last_insert_rowid.go

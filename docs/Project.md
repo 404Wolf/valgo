@@ -8,16 +8,16 @@ Name | Type | Description | Notes
 **Id** | **string** | The id of the project | 
 **CreatedAt** | **time.Time** |  | 
 **Privacy** | **string** | This resource&#39;s privacy setting. Unlisted resources do not appear on profile pages or elsewhere, but you can link to them. | 
-**ValTownUrl** | **string** | The URL of this resource on the Val Town website | 
 **Author** | [**MeComments200ResponseDataInnerAuthor**](MeComments200ResponseDataInnerAuthor.md) |  | 
 **Description** | **NullableString** |  | 
 **ImageUrl** | **NullableString** | The URL of this project&#39;s image | 
+**Links** | [**ProjectLinks**](ProjectLinks.md) |  | 
 
 ## Methods
 
 ### NewProject
 
-`func NewProject(name string, id string, createdAt time.Time, privacy string, valTownUrl string, author MeComments200ResponseDataInnerAuthor, description NullableString, imageUrl NullableString, ) *Project`
+`func NewProject(name string, id string, createdAt time.Time, privacy string, author MeComments200ResponseDataInnerAuthor, description NullableString, imageUrl NullableString, links ProjectLinks, ) *Project`
 
 NewProject instantiates a new Project object
 This constructor will assign default values to properties that have it defined,
@@ -112,26 +112,6 @@ and a boolean to check if the value has been set.
 SetPrivacy sets Privacy field to given value.
 
 
-### GetValTownUrl
-
-`func (o *Project) GetValTownUrl() string`
-
-GetValTownUrl returns the ValTownUrl field if non-nil, zero value otherwise.
-
-### GetValTownUrlOk
-
-`func (o *Project) GetValTownUrlOk() (*string, bool)`
-
-GetValTownUrlOk returns a tuple with the ValTownUrl field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetValTownUrl
-
-`func (o *Project) SetValTownUrl(v string)`
-
-SetValTownUrl sets ValTownUrl field to given value.
-
-
 ### GetAuthor
 
 `func (o *Project) GetAuthor() MeComments200ResponseDataInnerAuthor`
@@ -212,6 +192,26 @@ SetImageUrl sets ImageUrl field to given value.
 `func (o *Project) UnsetImageUrl()`
 
 UnsetImageUrl ensures that no value is present for ImageUrl, not even an explicit nil
+### GetLinks
+
+`func (o *Project) GetLinks() ProjectLinks`
+
+GetLinks returns the Links field if non-nil, zero value otherwise.
+
+### GetLinksOk
+
+`func (o *Project) GetLinksOk() (*ProjectLinks, bool)`
+
+GetLinksOk returns a tuple with the Links field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLinks
+
+`func (o *Project) SetLinks(v ProjectLinks)`
+
+SetLinks sets Links field to given value.
+
+
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
